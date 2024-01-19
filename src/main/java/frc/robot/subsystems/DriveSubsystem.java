@@ -29,13 +29,15 @@ public class DriveSubsystem extends SubsystemBase {
         m_driveTrain = new DifferentialDrive(m_leftFront, m_rightFront);
     }
 
-    public void startCoast() {
-        m_leftRear.setIdleMode(IdleMode.kCoast);
-        m_leftFront.setIdleMode(IdleMode.kCoast);
-        m_rightRear.setIdleMode(IdleMode.kCoast);
-        m_rightFront.setIdleMode(IdleMode.kCoast);
+    // sets all wheels to specified idle mode
+    public void setIdleMode(IdleMode mode) {
+        m_leftRear.setIdleMode(mode);
+        m_leftFront.setIdleMode(mode);
+        m_rightRear.setIdleMode(mode);
+        m_rightFront.setIdleMode(mode);
     }
 
+    // drives robot with specified throttle/turn values
     public void drive(double throttle, double turn) {
         m_driveTrain.arcadeDrive(throttle, turn);
     }
