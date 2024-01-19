@@ -14,10 +14,10 @@ import static frc.robot.Constants.FeederConstants;
 import static frc.robot.Constants.LauncherConstants;
 
 /** Add your docs here. */
-public class MechanismSubsystem extends SubsystemBase {
+public class LaunchFeedSubsystem extends SubsystemBase {
     private final CANSparkBase m_launchWheel;
     private final CANSparkBase m_feedWheel; 
-    public MechanismSubsystem()
+    public LaunchFeedSubsystem()
     {
         m_launchWheel = new CANSparkMax(6, MotorType.kBrushed);
         m_feedWheel = new CANSparkMax(5, MotorType.kBrushed);  

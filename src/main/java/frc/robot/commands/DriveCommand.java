@@ -5,8 +5,9 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.MechanismSubsystem;
+import frc.robot.subsystems.LaunchFeedSubsystem;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -14,14 +15,17 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class DriveCommand extends Command {
   private final DriveSubsystem m_driveSystem;
-  private final MechanismSubsystem m_mechSystem;
+  private final LaunchFeedSubsystem m_launchFeedSystem;
+  private final ClimberSubsystem m_climberSystem;
   private XboxController m_controller;
 
-  public DriveCommand(DriveSubsystem driveSystem, MechanismSubsystem mechSystem) {
+  public DriveCommand(DriveSubsystem driveSystem, LaunchFeedSubsystem launchFeedSystem, ClimberSubsystem climberSystem) {
     m_driveSystem = driveSystem;
-    m_mechSystem = mechSystem;
+    m_launchFeedSystem = launchFeedSystem;
+    m_climberSystem = climberSystem;
     addRequirements(driveSystem);
-    addRequirements(mechSystem);
+    addRequirements(launchFeedSystem);
+    addRequirements(climberSystem);
   }
 
   // Called when the command is initially scheduled.
@@ -35,24 +39,24 @@ public class DriveCommand extends Command {
   @Override
   public void execute() {
     if (m_controller.getRightBumperPressed())
-      m_mechSystem.launchControl(true);
+      m_launchFeedSystem.launchControl(true);
     else if (m_controller.getRightBumperReleased())
-      m_mechSystem.launchControl(false);
+      m_launchFeedSystem.launchControl(false);
 
     if (m_controller.getLeftBumperPressed())
-      m_mechSystem.feedControl(true);
+      m_launchFeedSystem.feedControl(true);
     else if (m_controller.getLeftBumperReleased())
-      m_mechSystem.feedControl(false);
+      m_launchFeedSystem.feedControl(false);
     
     if (m_controller.getAButtonPressed())
-      m_mechSystem.ampControl(true);
+      m_launchFeedSystem.ampControl(true);
     else if (m_controller.getAButtonReleased())
-      m_mechSystem.ampControl(false);
+      m_launchFeedSystem.ampControl(false);
     
     if (m_controller.getBButtonPressed())
-      m_mechSystem.intakeControl(true);
+      m_launchFeedSystem.intakeControl(true);
     else if (m_controller.getBButtonReleased())
-      m_mechSystem.intakeControl(false);
+      m_launchFeedSystem.intakeControl(false);
     
     m_driveSystem.drive(m_controller.getLeftY(), m_controller.getRightX());
   }

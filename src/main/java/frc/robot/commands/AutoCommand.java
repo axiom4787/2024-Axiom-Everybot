@@ -8,23 +8,28 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoMode;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.MechanismSubsystem;
+import frc.robot.subsystems.LaunchFeedSubsystem;
 
 public class AutoCommand extends Command {
   /** Creates a new AutoCommand. */
   private final DriveSubsystem m_driveSystem;
-  private final MechanismSubsystem m_mechSystem;
-  private final SendableChooser<AutoMode> m_chooser;
+  private final LaunchFeedSubsystem m_mechSystem;
+  private final SendableChooser<AutoMode> m_chooser = new SendableChooser<>();
   private AutoMode m_autoSelected;
   private double AUTO_LAUNCH_DELAY_S, AUTO_DRIVE_DELAY_S, 
   AUTO_DRIVE_TIME_S, AUTO_DRIVE_SPEED, AUTO_LAUNCHER_SPEED, autonomousStartTime;
-  public AutoCommand(DriveSubsystem driveSystem, MechanismSubsystem mechSystem, SendableChooser<AutoMode> chooser) {
+  public AutoCommand(DriveSubsystem driveSystem, LaunchFeedSubsystem mechSystem) {
     m_driveSystem = driveSystem;
     m_mechSystem = mechSystem;
-    m_chooser = chooser;
+    m_chooser.setDefaultOption("do nothing", AutoMode.amNothing);
+    m_chooser.addOption("launch note and drive", AutoMode.amLaunchDrive);
+    m_chooser.addOption("launch", AutoMode.amLaunch);
+    m_chooser.addOption("drive", AutoMode.amDrive);
+    SmartDashboard.putData("Auto Choices", m_chooser);
   }
 
   // Called when the command is initially scheduled.
