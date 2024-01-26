@@ -14,6 +14,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public void ExtendArms() {
         // extends arms up to hook onto chain
+        
+        // Assuming one motor
+        // Change code accordingly if more motors used for climber
+        // Something like this?
+        // https://www.andymark.com/products/climber-in-a-box
     }
 
     public void RetractArms() {

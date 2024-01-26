@@ -11,6 +11,11 @@ public final class Constants
     public static class DriveConstants
     {
         public static final int DRIVE_CURRENT_LIMIT_A = 60;
+
+        public static final int LEFT_REAR_MOTOR_ID = 0;
+        public static final int LEFT_FRONT_MOTOR_ID = 0;
+        public static final int RIGHT_REAR_MOTOR_ID = 0;
+        public static final int RIGHT_FRONT_MOTOR_ID = 0;
     }
     public static class FeederConstants
     {

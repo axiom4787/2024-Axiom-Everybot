@@ -14,10 +14,10 @@ public class DriveSubsystem extends SubsystemBase {
     private final CANSparkBase m_leftRear, m_leftFront, m_rightRear, m_rightFront;
     private final DifferentialDrive m_driveTrain;
     public DriveSubsystem() {
-        m_leftRear = new CANSparkMax(0, MotorType.kBrushed);
-        m_leftFront = new CANSparkMax(0, MotorType.kBrushed);
-        m_rightRear = new CANSparkMax(0, MotorType.kBrushed);
-        m_rightFront = new CANSparkMax(0, MotorType.kBrushed);
+        m_leftRear = new CANSparkMax(DriveConstants.LEFT_REAR_MOTOR_ID, MotorType.kBrushed);
+        m_leftFront = new CANSparkMax(DriveConstants.LEFT_FRONT_MOTOR_ID, MotorType.kBrushed);
+        m_rightRear = new CANSparkMax(DriveConstants.RIGHT_REAR_MOTOR_ID, MotorType.kBrushed);
+        m_rightFront = new CANSparkMax(DriveConstants.RIGHT_FRONT_MOTOR_ID, MotorType.kBrushed);
         m_leftRear.setSmartCurrentLimit(DriveConstants.DRIVE_CURRENT_LIMIT_A);
         m_leftFront.setSmartCurrentLimit(DriveConstants.DRIVE_CURRENT_LIMIT_A);
         m_rightRear.setSmartCurrentLimit(DriveConstants.DRIVE_CURRENT_LIMIT_A);
