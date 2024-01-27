@@ -12,10 +12,20 @@ public final class Constants
     {
         public static final int DRIVE_CURRENT_LIMIT_A = 60;
 
+        /*
+         * MOTOR IDS
+         * to set when motor IDs are determied (lol)
+         */
         public static final int LEFT_REAR_MOTOR_ID = 0;
         public static final int LEFT_FRONT_MOTOR_ID = 0;
         public static final int RIGHT_REAR_MOTOR_ID = 0;
         public static final int RIGHT_FRONT_MOTOR_ID = 0;
+        public static final int CLIMBER_MOTOR_ID = 0;
+
+        // default climber speed (speed at which climber retracts/expands)
+        // to set to whatever feels right
+        // also can be split to expand and retract speeds separately if needed
+        public static final double CLIMBER_MOTOR_SPEED = 0;
     }
     public static class FeederConstants
     {
