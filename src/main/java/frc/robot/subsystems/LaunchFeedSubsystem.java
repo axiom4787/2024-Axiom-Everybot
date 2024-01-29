@@ -10,8 +10,8 @@ import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import static frc.robot.Constants.FeederConstants;
-import static frc.robot.Constants.LauncherConstants;
+import frc.robot.Constants.FeederConstants;
+import frc.robot.Constants.LauncherConstants;
 
 /** Add your docs here. */
 public class LaunchFeedSubsystem extends SubsystemBase {

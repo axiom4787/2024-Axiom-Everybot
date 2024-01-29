@@ -36,7 +36,6 @@ public class AutoCommand extends Command {
   @Override
   public void initialize() {
     m_autoSelected = m_chooser.getSelected();
-    m_driveSystem.setIdleMode(IdleMode.kBrake);
 
     AUTO_LAUNCH_DELAY_S = 2;
     AUTO_DRIVE_DELAY_S = 3;
@@ -76,22 +75,22 @@ public class AutoCommand extends Command {
     if (timeElapsed < AUTO_LAUNCH_DELAY_S)
     {
       m_mechSystem.launchWheelSet(AUTO_LAUNCHER_SPEED);
-      m_driveSystem.drive(0, 0);
+//      m_driveSystem.drive(0, 0);
     }
     else if (timeElapsed < AUTO_DRIVE_DELAY_S)
     {
       m_mechSystem.feedWheelSet(AUTO_LAUNCHER_SPEED);
-      m_driveSystem.drive(0, 0);
+//      m_driveSystem.drive(0, 0);
     }
     else if (timeElapsed < AUTO_DRIVE_DELAY_S + AUTO_DRIVE_TIME_S)
     {
       m_mechSystem.feedWheelSet(0);
       m_mechSystem.launchWheelSet(0);
-      m_driveSystem.drive(AUTO_DRIVE_SPEED, 0);
+//      m_driveSystem.drive(AUTO_DRIVE_SPEED, 0);
     }
     else
     {
-      m_driveSystem.drive(0, 0);
+//      m_driveSystem.drive(0, 0);
     }
   }
 

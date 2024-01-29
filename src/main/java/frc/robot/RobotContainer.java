@@ -6,9 +6,11 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LaunchFeedSubsystem;
+import frc.robot.subsystems.LimeLight;
 
 public class RobotContainer {
-    private static final DriveSubsystem m_driveSystem = new DriveSubsystem();
+    private static final LimeLight m_limeLight = new LimeLight();
+    private static final DriveSubsystem m_driveSystem = new DriveSubsystem(m_limeLight);
     private static final LaunchFeedSubsystem m_mechSystem = new LaunchFeedSubsystem();
     private static final ClimberSubsystem m_climberSystem = new ClimberSubsystem();
     private static final AutoCommand m_autoCommand = new AutoCommand(m_driveSystem, m_mechSystem);
