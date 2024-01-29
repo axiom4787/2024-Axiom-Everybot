@@ -117,6 +117,26 @@ public class DriveCommand extends Command {
     else if (m_joystick.getRawButtonReleased(3))
       m_launchFeedSystem.intakeControl(false);
     
+    /* Climber commands
+     * X: extend arms to hook chain
+     * Y: retract arms to raise robot
+     * These button bindings can be changed later if the driver prefers
+     */
+    if (m_controller.getXButtonPressed()) {
+      System.out.println("Extending arm to hook onto chain...");
+      m_climberSystem.extendArms();
+    } else if (m_controller.getXButtonReleased()) { // motor speed is 0 if no button pressed
+      System.out.println("Reseting climber motor...");
+      m_climberSystem.resetMotor();
+    }
+    if (m_controller.getYButtonPressed()) {
+      System.out.println("Retracting arm to raise robot onto chain...");
+      m_climberSystem.retractArms();
+    } else if (m_controller.getYButtonReleased()) { // motor speed is 0 if no button pressed
+      System.out.println("Reseting climber motor...");
+      m_climberSystem.resetMotor();
+    }
+    
     // driving inputs
     m_driveSystem.drive(
       -MathUtil.applyDeadband(m_controller.getLeftY(),

@@ -145,6 +145,13 @@ public final class Constants
         public static final int kRearRightTurningCanId = 7; // neo 550
 
         public static final boolean kGyroReversed = false;
+
+        public static final int CLIMBER_MOTOR_ID = 0;
+
+        // default climber speed (speed at which climber retracts/expands)
+        // to set to whatever feels right
+        // also can be split to expand and retract speeds separately if needed
+        public static final double CLIMBER_MOTOR_SPEED = 0;
     }
 
     public static class FeederConstants
