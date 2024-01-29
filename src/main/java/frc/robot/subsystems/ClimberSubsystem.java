@@ -23,15 +23,15 @@ public class ClimberSubsystem extends SubsystemBase {
     private final CANSparkBase m_motor;
 
     public ClimberSubsystem() {
-        m_motor = new CANSparkMax(DriveConstants.CLIMBER_MOTOR_ID, MotorType.kBrushed);
+        m_motor = new CANSparkMax(DriveConstants.kClimberMotorID, MotorType.kBrushed);
     }
 
     public void extendArms() { // hook onto chain
-        m_motor.set(DriveConstants.CLIMBER_MOTOR_SPEED);
+        m_motor.set(DriveConstants.kClimberMotorSpeed);
     }
 
     public void retractArms() { // pull up onto chain
-        m_motor.set(-DriveConstants.CLIMBER_MOTOR_SPEED);
+        m_motor.set(-DriveConstants.kClimberMotorSpeed);
     }
 
     public void resetMotor() { // reset motor speed after done
