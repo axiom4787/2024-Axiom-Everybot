@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants.FeederConstants;
 import frc.robot.Constants.LauncherConstants;
+import frc.robot.Constants.DriveConstants;
 
 /** Add your docs here. */
 public class LaunchFeedSubsystem extends SubsystemBase {
@@ -19,8 +20,8 @@ public class LaunchFeedSubsystem extends SubsystemBase {
     private final CANSparkBase m_feedWheel; 
     public LaunchFeedSubsystem()
     {
-        m_launchWheel = new CANSparkMax(6, MotorType.kBrushed);
-        m_feedWheel = new CANSparkMax(5, MotorType.kBrushed);  
+        m_launchWheel = new CANSparkMax(DriveConstants.kLaunchCanId, MotorType.kBrushed);
+        m_feedWheel = new CANSparkMax(DriveConstants.kFeedCanId, MotorType.kBrushed);  
         m_feedWheel.setInverted(true);
         m_launchWheel.setInverted(true);
         m_feedWheel.setSmartCurrentLimit(FeederConstants.FEEDER_CURRENT_LIMIT_A);

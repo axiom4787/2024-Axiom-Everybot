@@ -134,6 +134,7 @@ public final class Constants
         public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
         // SPARK MAX CAN IDs
+        public static final int kClimberCanId = 0;
         public static final int kFrontLeftDrivingCanId = 4; // neo
         public static final int kRearLeftDrivingCanId = 2; // neo
         public static final int kFrontRightDrivingCanId = 6; // neo
@@ -144,9 +145,10 @@ public final class Constants
         public static final int kFrontRightTurningCanId = 5; // neo 550
         public static final int kRearRightTurningCanId = 7; // neo 550
 
-        public static final boolean kGyroReversed = false;
+        public static final int kLaunchCanId = 10;
+        public static final int kFeedCanId = 9;
 
-        public static final int kClimberMotorID = 0;
+        public static final boolean kGyroReversed = false;
 
         // default climber speed (speed at which climber retracts/expands)
         // to set to whatever feels right

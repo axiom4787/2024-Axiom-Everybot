@@ -23,7 +23,7 @@ public class ClimberSubsystem extends SubsystemBase {
     private final CANSparkBase m_motor;
 
     public ClimberSubsystem() {
-        m_motor = new CANSparkMax(DriveConstants.kClimberMotorID, MotorType.kBrushed);
+        m_motor = new CANSparkMax(DriveConstants.kClimberCanId, MotorType.kBrushed);
     }
 
     public void extendArms() { // hook onto chain
