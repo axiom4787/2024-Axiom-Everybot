@@ -128,22 +128,22 @@ public final class Constants
                 new Translation2d(-kWheelBase / 2, -kTrackWidth / 2));
 
         // Angular offsets of the modules relative to the chassis in radians
-        public static final double kFrontLeftChassisAngularOffset = -Math.PI / 2;
-        public static final double kFrontRightChassisAngularOffset = 0;
-        public static final double kBackLeftChassisAngularOffset = Math.PI;
-        public static final double kBackRightChassisAngularOffset = Math.PI / 2;
+        public static final double kFrontLeftChassisAngularOffset = 90;
+        public static final double kFrontRightChassisAngularOffset = 90;
+        public static final double kBackLeftChassisAngularOffset = 90;
+        public static final double kBackRightChassisAngularOffset = 90;
 
         // SPARK MAX CAN IDs
         public static final int kClimberCanId = 0;
-        public static final int kFrontLeftDrivingCanId = 4; // neo
-        public static final int kRearLeftDrivingCanId = 2; // neo
-        public static final int kFrontRightDrivingCanId = 6; // neo
-        public static final int kRearRightDrivingCanId = 8; // neo
+        public static final int kFrontLeftDrivingCanId = 3; // neo
+        public static final int kRearLeftDrivingCanId = 5; // neo 1
+        public static final int kFrontRightDrivingCanId = 9; // neo
+        public static final int kRearRightDrivingCanId = 7; // neo 7
 
-        public static final int kFrontLeftTurningCanId = 3; // neo 550
-        public static final int kRearLeftTurningCanId = 1; // neo 550
-        public static final int kFrontRightTurningCanId = 5; // neo 550
-        public static final int kRearRightTurningCanId = 7; // neo 550
+        public static final int kFrontLeftTurningCanId = 4; // neo 550
+        public static final int kRearLeftTurningCanId = 6; // neo 550 2
+        public static final int kFrontRightTurningCanId = 2; // neo 550
+        public static final int kRearRightTurningCanId = 8; // neo 550 8
 
         public static final int kLaunchCanId = 10;
         public static final int kFeedCanId = 9;

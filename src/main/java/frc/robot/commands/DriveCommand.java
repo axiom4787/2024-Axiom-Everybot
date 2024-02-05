@@ -22,18 +22,18 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 
 public class DriveCommand extends Command {
   private final DriveSubsystem m_driveSystem;
-  private final LaunchFeedSubsystem m_launchFeedSystem;
-  private final ClimberSubsystem m_climberSystem;
+  //**/ private final LaunchFeedSubsystem m_launchFeedSystem;
+  //**/ private final ClimberSubsystem m_climberSystem;
   private XboxController m_controller;
   private Joystick m_joystick;
 
-  public DriveCommand(DriveSubsystem driveSystem, LaunchFeedSubsystem launchFeedSystem, ClimberSubsystem climberSystem) {
+  public DriveCommand(DriveSubsystem driveSystem/*/, LaunchFeedSubsystem launchFeedSystem /**/ /*/, ClimberSubsystem climberSystem/**/) {
     m_driveSystem = driveSystem;
-    m_launchFeedSystem = launchFeedSystem;
-    m_climberSystem = climberSystem;
+    //**/ m_launchFeedSystem = launchFeedSystem;
+    //**/m_climberSystem = climberSystem;
     addRequirements(driveSystem);
-    addRequirements(launchFeedSystem);
-    addRequirements(climberSystem);
+    //**/ addRequirements(launchFeedSystem);
+    //**/addRequirements(climberSystem);
   }
 
   private boolean isFieldRelative = true;
@@ -97,6 +97,7 @@ public class DriveCommand extends Command {
   @Override
   public void execute() {
     // intake, scoring, climbing inputs
+    /*
     if (m_joystick.getRawButton(0))
       m_launchFeedSystem.launchControl(true);
     else if (m_joystick.getRawButtonReleased(0))
@@ -126,7 +127,7 @@ public class DriveCommand extends Command {
       m_climberSystem.retractArms();
     else if (m_joystick.getRawButtonReleased(5))
       m_climberSystem.resetMotor();
-    
+    //*/
     // driving inputs
     m_driveSystem.drive(
       -MathUtil.applyDeadband(m_controller.getLeftY(),
