@@ -135,15 +135,15 @@ public final class Constants
 
         // SPARK MAX CAN IDs
         public static final int kClimberCanId = 0;
-        public static final int kFrontLeftDrivingCanId = 4; // neo
-        public static final int kRearLeftDrivingCanId = 2; // neo
-        public static final int kFrontRightDrivingCanId = 6; // neo
-        public static final int kRearRightDrivingCanId = 8; // neo
+        public static final int kFrontLeftDrivingCanId = 3; // neo
+        public static final int kRearLeftDrivingCanId = 5; // neo
+        public static final int kFrontRightDrivingCanId = 9; // neo
+        public static final int kRearRightDrivingCanId = 7; // neo
 
-        public static final int kFrontLeftTurningCanId = 3; // neo 550
-        public static final int kRearLeftTurningCanId = 1; // neo 550
-        public static final int kFrontRightTurningCanId = 5; // neo 550
-        public static final int kRearRightTurningCanId = 7; // neo 550
+        public static final int kFrontLeftTurningCanId = 4; // neo 550
+        public static final int kRearLeftTurningCanId = 6; // neo 550
+        public static final int kFrontRightTurningCanId = 2; // neo 550
+        public static final int kRearRightTurningCanId = 8; // neo 550
 
         public static final int kLaunchCanId = 10;
         public static final int kFeedCanId = 9;
