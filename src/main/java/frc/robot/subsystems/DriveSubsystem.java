@@ -18,6 +18,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -61,6 +62,9 @@ public class DriveSubsystem extends SubsystemBase {
     private double m_frontRightPosition = m_frontRight.getPosition().distanceMeters;
     private double m_rearLeftPosition = m_rearLeft.getPosition().distanceMeters;
     private double m_rearRightPosition = m_rearRight.getPosition().distanceMeters;
+
+    // Field object for Smart Dashboard
+    private final Field2d m_field;
 
     // The gyro sensor
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // navX
@@ -108,6 +112,8 @@ public class DriveSubsystem extends SubsystemBase {
         trackingPID.setTolerance(DriveConstants.kTrackingTolerance);
         trackingPID.setIntegratorRange(DriveConstants.kTrackingIntergratorRangeMin,
                 DriveConstants.kTrackingIntergratorRangeMax);
+        m_field = new Field2d();
+        SmartDashboard.putData("Field", m_field);
     }
 
     public void toggleCam() {
@@ -156,6 +162,7 @@ public class DriveSubsystem extends SubsystemBase {
                 });
         //m_odometry.addVisionMeasurement(LL.getBotPose2d(), LL.getLocalizationLatency());
         m_odometry.addVisionMeasurement(LL.getBotPose2d(), 0.03);
+        m_field.setRobotPose(m_odometry.getEstimatedPosition());
     }
 
     /**
