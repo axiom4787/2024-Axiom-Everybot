@@ -113,7 +113,6 @@ public class DriveSubsystem extends SubsystemBase {
         trackingPID.setIntegratorRange(DriveConstants.kTrackingIntergratorRangeMin,
                 DriveConstants.kTrackingIntergratorRangeMax);
         m_field = new Field2d();
-        SmartDashboard.putData("Field", m_field);
     }
 
     public void toggleCam() {
@@ -146,6 +145,10 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("X Translation Drive", m_odometry.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Y Translation Drive", m_odometry.getEstimatedPosition().getY());
         SmartDashboard.putNumber("Yaw Rotation Drive", m_odometry.getEstimatedPosition().getRotation().getDegrees());
+
+        m_field.setRobotPose(m_odometry.getEstimatedPosition());
+
+        SmartDashboard.putData("Field", m_field);
     }
 
     @Override
@@ -162,7 +165,6 @@ public class DriveSubsystem extends SubsystemBase {
                 });
         //m_odometry.addVisionMeasurement(LL.getBotPose2d(), LL.getLocalizationLatency());
         m_odometry.addVisionMeasurement(LL.getBotPose2d(), 0.03);
-        m_field.setRobotPose(m_odometry.getEstimatedPosition());
     }
 
     /**
