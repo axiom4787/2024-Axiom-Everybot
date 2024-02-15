@@ -9,9 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.LaunchFeedSubsystem;
 
 import com.revrobotics.CANSparkBase.IdleMode;
 
@@ -22,18 +20,12 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 
 public class DriveCommand extends Command {
   private final DriveSubsystem m_driveSystem;
-  //private final LaunchFeedSubsystem m_launchFeedSystem;
-  //private final ClimberSubsystem m_climberSystem;
   private XboxController m_controller;
   private Joystick m_joystick;
 
-  public DriveCommand(DriveSubsystem driveSystem/*/, LaunchFeedSubsystem launchFeedSystem, ClimberSubsystem climberSystem/**/) {
+  public DriveCommand(DriveSubsystem driveSystem) {
     m_driveSystem = driveSystem;
-    //m_launchFeedSystem = launchFeedSystem;
-    //m_climberSystem = climberSystem;
     addRequirements(driveSystem);
-    //addRequirements(launchFeedSystem);
-    //addRequirements(climberSystem);
   }
 
   private boolean isFieldRelative = true;
@@ -96,47 +88,14 @@ public class DriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // intake, scoring, climbing inputs
-    /*
-    if (m_joystick.getRawButton(0))
-      m_launchFeedSystem.launchControl(true);
-    else if (m_joystick.getRawButtonReleased(0))
-      m_launchFeedSystem.launchControl(false);
-
-    if (m_joystick.getRawButton(1))
-      m_launchFeedSystem.feedControl(true);
-    else if (m_joystick.getRawButtonReleased(1))
-      m_launchFeedSystem.feedControl(false);
-    
-    if (m_joystick.getRawButton(2))
-      m_launchFeedSystem.ampControl(true);
-    else if (m_joystick.getRawButtonReleased(2))
-      m_launchFeedSystem.ampControl(false);
-    
-    if (m_joystick.getRawButton(3))
-      m_launchFeedSystem.intakeControl(true);
-    else if (m_joystick.getRawButtonReleased(3))
-      m_launchFeedSystem.intakeControl(false);
-    
-    if (m_joystick.getRawButton(4))
-      m_climberSystem.extendArms();
-    else if (m_joystick.getRawButtonReleased(4))
-      m_climberSystem.resetMotor();
-
-    if (m_joystick.getRawButton(5))
-      m_climberSystem.retractArms();
-    else if (m_joystick.getRawButtonReleased(5))
-      m_climberSystem.resetMotor();
-    */
-    // driving inputs
     m_driveSystem.drive(
-      -MathUtil.applyDeadband(m_controller.getLeftY(),
+      -MathUtil.applyDeadband(m_controller.getLeftY()/2,
         OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband(
-        m_controller.getLeftX(),
+        m_controller.getLeftX()/2,
         OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband(
-        m_controller.getRightX(),
+        m_controller.getRightX()/2,
         OIConstants.kDriveDeadband),
       isFieldRelative, true, isTrackingObject,
       isAvoidingObject, isBalancing);
