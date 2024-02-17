@@ -154,8 +154,9 @@ public final class Constants
         public static final boolean kGyroReversed = false;
 
         public static final double kClimberMotorSpeed = 1;
-        public static final double kShooterSpeed = 1;
-        public static final double kGrabberSpeed = 1;
+        public static final double kTopShooterSpeed = 1;
+        public static final double kBottomShooterSpeed = 1;
+        public static final double kGrabberSpeed = 0.25;
     }
 
     public static class FeederConstants

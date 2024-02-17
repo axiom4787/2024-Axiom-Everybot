@@ -80,19 +80,19 @@ public class DriveCommand extends Command {
       .toggleOnTrue(new InstantCommand(
         this::toggleTracking));
 
-    new JoystickButton(m_controller, Button.kLeftBumper.value)
-      .toggleOnTrue(new InstantCommand(
-        m_driveSystem::toggleCam, m_driveSystem));
+    // new JoystickButton(m_controller, Button.kLeftBumper.value)
+    //   .toggleOnTrue(new InstantCommand(
+    //     m_driveSystem::toggleCam, m_driveSystem));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_driveSystem.drive(
-      -MathUtil.applyDeadband(m_controller.getLeftY()/2,
+      -MathUtil.applyDeadband(m_controller.getLeftY()/5,
         OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband(
-        m_controller.getLeftX()/2,
+        m_controller.getLeftX()/5,
         OIConstants.kDriveDeadband),
       -MathUtil.applyDeadband(
         m_controller.getRightX()/2,

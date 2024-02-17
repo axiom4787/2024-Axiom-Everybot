@@ -17,6 +17,7 @@ public class MechanismCommand extends Command {
   /** Creates a new MechanismCommand. */
   public MechanismCommand(MechanismSubsystem subsystem) {
     m_subsystem = subsystem;
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -29,19 +30,19 @@ public class MechanismCommand extends Command {
   // FOR USE IN DEBUG WITH CONTROLLER ONLY
   @Override
   public void execute() {
-    if (m_controller.getLeftBumper())
-      m_subsystem.intakeNote();
-    else if (m_controller.getRightBumper())
-      m_subsystem.shootNote();
-    else
-      m_subsystem.resetShooter();
-
-    // if (m_controller.getLeftStickButton())
-    //   m_subsystem.grabNote();
-    // else if (m_controller.getRightStickButton())
-    //   m_subsystem.dropNote();
+    // if (m_controller.getLeftBumper())
+    //   m_subsystem.intakeNote();
+    // else if (m_controller.getRightBumper())
+    //   m_subsystem.shootNote();
     // else
-    //   m_subsystem.resetGrabber();
+    //   m_subsystem.resetShooter();
+
+    if (m_controller.getLeftBumper())
+      m_subsystem.grabNote();
+    else if (m_controller.getRightBumper())
+      m_subsystem.dropNote();
+    else
+      m_subsystem.resetGrabber();
 
     // if (m_controller.getLeftTriggerAxis() > 0.5))
     //   m_subsystem.extendArms();
