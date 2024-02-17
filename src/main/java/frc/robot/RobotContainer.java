@@ -27,7 +27,8 @@ public class RobotContainer {
     private static final ChoreoTrajectory autoPath = Choreo.getTrajectory("test");
 
     public Command getTeleopCommand() {
-        return new ParallelCommandGroup(m_driveCommand, m_mechCommand);
+//        return new ParallelCommandGroup(m_driveCommand, m_mechCommand);
+        return m_mechCommand;
     }
 
     public Command getAutoCommand() {
@@ -43,7 +44,7 @@ public class RobotContainer {
                     speeds.vyMetersPerSecond, 
                     speeds.omegaRadiansPerSecond, 
                     false, true, false, false, false),
-            () -> {
+            () -> { 
                 Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
                 return alliance.isPresent() && alliance.get() == Alliance.Red;
             }, 

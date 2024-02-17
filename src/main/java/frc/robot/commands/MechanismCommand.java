@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.MechanismSubsystem;
@@ -30,19 +29,19 @@ public class MechanismCommand extends Command {
   // FOR USE IN DEBUG WITH CONTROLLER ONLY
   @Override
   public void execute() {
-    // if (m_controller.getLeftBumper())
-    //   m_subsystem.intakeNote();
-    // else if (m_controller.getRightBumper())
-    //   m_subsystem.shootNote();
-    // else
-    //   m_subsystem.resetShooter();
-
     if (m_controller.getLeftBumper())
-      m_subsystem.grabNote();
+      m_subsystem.intakeNote();
     else if (m_controller.getRightBumper())
-      m_subsystem.dropNote();
+      m_subsystem.shootNote();
     else
-      m_subsystem.resetGrabber();
+      m_subsystem.resetShooter();
+
+    // if (m_controller.getLeftBumper())
+    //   m_subsystem.grabNote();
+    // else if (m_controller.getRightBumper())
+    //   m_subsystem.dropNote();
+    // else
+    //   m_subsystem.resetGrabber();
 
     // if (m_controller.getLeftTriggerAxis() > 0.5))
     //   m_subsystem.extendArms();
@@ -51,34 +50,6 @@ public class MechanismCommand extends Command {
     // else
     //   m_subsystem.resetArmMotors();
   }
-
-  // FOR USE IN COMPETITION WITH CONTROLLER AND JOYSTICK
-  /*
-  @Override
-  public void execute()
-  {
-    if (m_joystick.getRawButton(5))
-      m_subsystem.intakeNote();
-    else if (m_joystick.getRawButton(3))
-      m_subsystem.shootNote();
-    else
-      m_subsystem.resetShooter();
-
-    if (m_joystick.getRawButton(6))
-      m_subsystem.grabNote();
-    else if (m_joystick.getRawButton(4))
-      m_subsystem.dropNote();
-    else
-      m_subsystem.resetGrabber();
-
-    if (m_joystick.getRawButton(1))
-      m_subsystem.extendArms();
-    else if (m_joystick.getRawButton(2))
-      m_subsystem.retractArms();
-    else
-      m_subsystem.resetArmMotors();
-  }
-  */
 
   // Called once the command ends or is interrupted.
   @Override
