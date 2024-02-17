@@ -24,10 +24,7 @@ public class DriveCommand extends Command {
   private boolean isBalancing = false;
   private boolean isTrackingObject = false;
   private boolean isAvoidingObject = false;
-
-  private void toggleFieldRelative() {
-    isFieldRelative = !isFieldRelative;
-  }
+  private boolean isDefending = false;
  
   // Called when the command is initially scheduled.
   @Override
@@ -38,12 +35,22 @@ public class DriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_driveSystem.drive(
-      -MathUtil.applyDeadband(m_controller.getLeftY()/3, OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_controller.getLeftX()/3, OIConstants.kDriveDeadband),
-      -MathUtil.applyDeadband(m_controller.getRightX()/2, OIConstants.kDriveDeadband),
-      isFieldRelative, true, isTrackingObject,
-      isAvoidingObject, isBalancing);
+    if (m_controller.getBButtonPressed())
+      isFieldRelative = !isFieldRelative;
+    if (m_controller.getYButtonPressed())
+      m_driveSystem.toggleCam();
+    if (m_controller.getAButtonPressed() && isFieldRelative)
+      m_driveSystem.zeroHeading();
+    if (m_controller.getXButtonPressed())
+      isDefending = !isDefending;
+    if (isDefending)
+      m_driveSystem.setX();
+    else
+      m_driveSystem.drive(
+        -MathUtil.applyDeadband(m_controller.getLeftY()/3, OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_controller.getLeftX()/3, OIConstants.kDriveDeadband),
+        -MathUtil.applyDeadband(m_controller.getRightX()/2, OIConstants.kDriveDeadband),
+        isFieldRelative, true, isTrackingObject, isAvoidingObject, isBalancing);
   }
 
   // Called once the command ends or is interrupted.

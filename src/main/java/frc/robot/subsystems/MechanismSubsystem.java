@@ -28,36 +28,24 @@ public class MechanismSubsystem extends SubsystemBase {
 //        m_rightClimber.setSmartCurrentLimit(40);
     }   
 
-    public void intakeNote()
+    public void ejectNote()
     {
         m_bottomShooter.set(-DriveConstants.kBottomShooterSpeed);
         m_topShooter.set(-DriveConstants.kTopShooterSpeed);
-    }
-
-    public void shootNote()
-    {
-        m_bottomShooter.set(DriveConstants.kBottomShooterSpeed);
-        m_topShooter.set(DriveConstants.kTopShooterSpeed);
-    }
-
-    public void resetShooter()
-    {
-        m_bottomShooter.set(0);
-        m_topShooter.set(0);
-    }
-
-    public void grabNote()
-    {
-        m_grabber.set(DriveConstants.kGrabberSpeed);
-    }
-
-    public void dropNote()
-    {
         m_grabber.set(-DriveConstants.kGrabberSpeed);
     }
 
-    public void resetGrabber()
+    public void intakeNote()
     {
+        m_bottomShooter.set(DriveConstants.kBottomShooterSpeed);
+        m_topShooter.set(DriveConstants.kTopShooterSpeed);
+        m_grabber.set(DriveConstants.kGrabberSpeed);
+    }
+
+    public void resetMotors()
+    {
+        m_bottomShooter.set(0);
+        m_topShooter.set(0);
         m_grabber.set(0);
     }
 

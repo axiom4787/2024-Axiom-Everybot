@@ -11,7 +11,6 @@ import frc.robot.subsystems.MechanismSubsystem;
 public class MechanismCommand extends Command {
   private final MechanismSubsystem m_subsystem;
   private XboxController m_controller;
-//  private Joystick m_joystick;
 
   /** Creates a new MechanismCommand. */
   public MechanismCommand(MechanismSubsystem subsystem) {
@@ -23,29 +22,20 @@ public class MechanismCommand extends Command {
   @Override
   public void initialize() {
     m_controller = new XboxController(0);
-//    m_joystick = new Joystick(1);
   }
 
-  // FOR USE IN DEBUG WITH CONTROLLER ONLY
   @Override
   public void execute() {
     if (m_controller.getLeftBumper())
-      m_subsystem.intakeNote();
+      m_subsystem.ejectNote();
     else if (m_controller.getRightBumper())
-      m_subsystem.shootNote();
+      m_subsystem.intakeNote();
     else
-      m_subsystem.resetShooter();
+      m_subsystem.resetMotors();
 
-    // if (m_controller.getLeftBumper())
-    //   m_subsystem.grabNote();
-    // else if (m_controller.getRightBumper())
-    //   m_subsystem.dropNote();
-    // else
-    //   m_subsystem.resetGrabber();
-
-    // if (m_controller.getLeftTriggerAxis() > 0.5))
+    // if (m_controller.getLeftTriggerAxis() > 0.8))
     //   m_subsystem.extendArms();
-    // else if (m_controller.getRightTriggerAxis() > 0.5)
+    // else if (m_controller.getRightTriggerAxis() > 0.8)
     //   m_subsystem.retractArms();
     // else
     //   m_subsystem.resetArmMotors();
