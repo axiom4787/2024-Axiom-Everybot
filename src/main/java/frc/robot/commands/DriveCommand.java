@@ -49,9 +49,9 @@ public class DriveCommand extends Command {
     }
     double xSpeed, ySpeed, rot;
     if (m_controller.getPOV() != -1) {
-      double POV = m_controller.getPOV();
-      xSpeed = OIConstants.kAdjustSpeed*Math.cos((-2*Math.PI*POV)/8+Math.PI/2);
-      ySpeed = OIConstants.kAdjustSpeed*Math.sin((-2*Math.PI*POV)/8+Math.PI/2); 
+      double POV = Math.toRadians(-m_controller.getPOV()+90);
+      xSpeed = OIConstants.kAdjustSpeed*Math.cos(POV);
+      ySpeed = OIConstants.kAdjustSpeed*Math.sin(POV); 
     }
     else {
       xSpeed = -MathUtil.applyDeadband(m_controller.getLeftY()/3, OIConstants.kDriveDeadband);

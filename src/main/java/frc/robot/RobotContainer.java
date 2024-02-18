@@ -23,11 +23,11 @@ public class RobotContainer {
     private static final MechanismSubsystem m_mechSystem = new MechanismSubsystem();
     private static final DriveCommand m_driveCommand = new DriveCommand(m_driveSystem);
     private static final MechanismCommand m_mechCommand = new MechanismCommand(m_mechSystem);
+    private static final ParallelCommandGroup m_teleopCommand = new ParallelCommandGroup(m_driveCommand, m_mechCommand);
     private static final ChoreoTrajectory autoPath = Choreo.getTrajectory("test");
 
     public Command getTeleopCommand() {
-//        return new ParallelCommandGroup(m_driveCommand, m_mechCommand);
-        return m_mechCommand;
+        return m_teleopCommand;
     }
 
     public Command getAutoCommand() {
