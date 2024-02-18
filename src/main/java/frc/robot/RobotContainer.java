@@ -21,7 +21,6 @@ public class RobotContainer {
     private static final LimeLight m_limeLight = new LimeLight();
     private static final DriveSubsystem m_driveSystem = new DriveSubsystem(m_limeLight);
     private static final MechanismSubsystem m_mechSystem = new MechanismSubsystem();
-    //private static final AutoCommand m_autoCommand = new AutoCommand(m_driveSystem/*/, m_mechSystem/**/);
     private static final DriveCommand m_driveCommand = new DriveCommand(m_driveSystem);
     private static final MechanismCommand m_mechCommand = new MechanismCommand(m_mechSystem);
     private static final ChoreoTrajectory autoPath = Choreo.getTrajectory("test");
@@ -43,7 +42,7 @@ public class RobotContainer {
                     speeds.vxMetersPerSecond, 
                     speeds.vyMetersPerSecond, 
                     speeds.omegaRadiansPerSecond, 
-                    false, true, false, false, false),
+                    true, true, false, false, false),
             () -> { 
                 Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
                 return alliance.isPresent() && alliance.get() == Alliance.Red;

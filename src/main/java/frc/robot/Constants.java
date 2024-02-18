@@ -160,6 +160,7 @@ public final class Constants
     }
 
     public static final class OIConstants {
+        public static final double kAdjustSpeed = 0.15;
         public static final double kDriveDeadband = 0.1;
     }
 

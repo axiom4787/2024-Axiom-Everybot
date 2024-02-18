@@ -43,14 +43,27 @@ public class DriveCommand extends Command {
       m_driveSystem.zeroHeading();
     if (m_controller.getXButtonPressed())
       isDefending = !isDefending;
-    if (isDefending)
+    if (isDefending) {
       m_driveSystem.setX();
+      return;
+    }
+    double xSpeed, ySpeed, rot;
+    if (m_controller.getPOV() != -1) {
+      double POV = m_controller.getPOV();
+      xSpeed = OIConstants.kAdjustSpeed*Math.cos((-2*Math.PI*POV)/8+Math.PI/2);
+      ySpeed = OIConstants.kAdjustSpeed*Math.sin((-2*Math.PI*POV)/8+Math.PI/2); 
+    }
+    else {
+      xSpeed = -MathUtil.applyDeadband(m_controller.getLeftY()/3, OIConstants.kDriveDeadband);
+      ySpeed = -MathUtil.applyDeadband(m_controller.getLeftX()/3, OIConstants.kDriveDeadband);
+    }
+    if (m_controller.getBackButton())
+      rot = -OIConstants.kAdjustSpeed;
+    else if (m_controller.getStartButton())
+      rot = OIConstants.kAdjustSpeed;
     else
-      m_driveSystem.drive(
-        -MathUtil.applyDeadband(m_controller.getLeftY()/3, OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(m_controller.getLeftX()/3, OIConstants.kDriveDeadband),
-        -MathUtil.applyDeadband(m_controller.getRightX()/2, OIConstants.kDriveDeadband),
-        isFieldRelative, true, isTrackingObject, isAvoidingObject, isBalancing);
+      rot = -MathUtil.applyDeadband(m_controller.getRightX()/2, OIConstants.kDriveDeadband);
+    m_driveSystem.drive(xSpeed, ySpeed, rot, isFieldRelative, true, isTrackingObject, isAvoidingObject, isBalancing);
   }
 
   // Called once the command ends or is interrupted.
