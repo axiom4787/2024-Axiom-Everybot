@@ -15,6 +15,8 @@ public final class Constants
         amDrive,
     }
 
+    public static final boolean xbox = false;
+
     public static class LimelightConstants {
         public static final double kLLHeight = Units.inchesToMeters(24.5);
         public static final double kLLPitch = Units.degreesToRadians(0);
@@ -160,7 +162,8 @@ public final class Constants
     }
 
     public static final class OIConstants {
-        public static final double kAdjustSpeed = 0.15;
+        public static final double kDriveAdjustSpeed = 0.05;
+        public static final double kTurnAdjustSpeed = 0.15;
         public static final double kDriveDeadband = 0.1;
     }
 
