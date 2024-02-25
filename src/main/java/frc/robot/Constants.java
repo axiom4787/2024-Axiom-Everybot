@@ -1,10 +1,10 @@
 package frc.robot;
 
-import com.revrobotics.CANSparkBase.IdleMode;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
+
+import com.revrobotics.CANSparkBase.IdleMode;
 
 public final class Constants
 {
@@ -136,19 +136,19 @@ public final class Constants
         public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
         // SPARK MAX CAN IDs
-        public static final int kFrontLeftDrivingCanId = 3; // neo
-        public static final int kRearLeftDrivingCanId = 5; // neo
-        public static final int kFrontRightDrivingCanId = 9; // neo
-        public static final int kRearRightDrivingCanId = 7; // neo
+        public static final int kFrontLeftDrivingCanId = 5; // neo
+        public static final int kRearLeftDrivingCanId = 7; // neo
+        public static final int kFrontRightDrivingCanId = 3; // neo
+        public static final int kRearRightDrivingCanId = 9; // neo
 
-        public static final int kFrontLeftTurningCanId = 4; // neo 550
-        public static final int kRearLeftTurningCanId = 6; // neo 550
-        public static final int kFrontRightTurningCanId = 2; // neo 550
-        public static final int kRearRightTurningCanId = 8; // neo 550
+        public static final int kFrontLeftTurningCanId = 6; // neo 550
+        public static final int kRearLeftTurningCanId = 8; // neo 550
+        public static final int kFrontRightTurningCanId = 4; // neo 550
+        public static final int kRearRightTurningCanId = 2; // neo 550
 
-        public static final int kBottomShooterCanId = 10;
+        public static final int kBottomShooterCanId = 12;
         public static final int kTopShooterCanId = 11;
-        public static final int kGrabberCanId = 12;
+        public static final int kGrabberCanId = 10;
 
         public static final int kLeftClimberCanId = 13;
         public static final int kRightClimberCanId = 14;
@@ -156,9 +156,9 @@ public final class Constants
         public static final boolean kGyroReversed = false;
 
         public static final double kClimberMotorSpeed = 1;
-        public static final double kTopShooterSpeed = 1;
-        public static final double kBottomShooterSpeed = 1;
-        public static final double kGrabberSpeed = 0.25;
+        public static final double kTopShooterSpeed = 0.1;
+        public static final double kBottomShooterSpeed = 0.1;
+        public static final double kGrabberSpeed = 0.1;
     }
 
     public static final class OIConstants {

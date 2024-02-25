@@ -1,23 +1,25 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
-import frc.robot.Constants.DriveConstants;
+//import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 
 public class MechanismSubsystem extends SubsystemBase {
     private final CANSparkMax m_bottomShooter;
     private final CANSparkMax m_topShooter;
-   private final CANSparkMax m_grabber;
-//    private final CANSparkMax m_leftClimber;
-//    private final CANSparkMax m_rightClimber;
+    private final CANSparkMax m_grabber;
+//    private final TalonFX m_leftClimber;
+//    private final TalonFX m_rightClimber;
 
     public MechanismSubsystem()
     {
-        m_bottomShooter = new CANSparkMax(DriveConstants.kBottomShooterCanId, MotorType.kBrushed);
-        m_topShooter = new CANSparkMax(DriveConstants.kTopShooterCanId, MotorType.kBrushed);
+        m_bottomShooter = new CANSparkMax(DriveConstants.kBottomShooterCanId, MotorType.kBrushless);
+        m_topShooter = new CANSparkMax(DriveConstants.kTopShooterCanId, MotorType.kBrushless);
         m_grabber = new CANSparkMax(DriveConstants.kGrabberCanId, MotorType.kBrushed);
         m_topShooter.setSmartCurrentLimit(40);
         m_bottomShooter.setSmartCurrentLimit(40);
@@ -30,16 +32,16 @@ public class MechanismSubsystem extends SubsystemBase {
 
     public void ejectNote()
     {
-        m_bottomShooter.set(-DriveConstants.kBottomShooterSpeed);
-        m_topShooter.set(-DriveConstants.kTopShooterSpeed);
-        m_grabber.set(-DriveConstants.kGrabberSpeed);
+        m_bottomShooter.set(DriveConstants.kBottomShooterSpeed);
+        m_topShooter.set(DriveConstants.kTopShooterSpeed);
+        m_grabber.set(DriveConstants.kGrabberSpeed);
     }
 
     public void intakeNote()
     {
-        m_bottomShooter.set(DriveConstants.kBottomShooterSpeed);
-        m_topShooter.set(DriveConstants.kTopShooterSpeed);
-        m_grabber.set(DriveConstants.kGrabberSpeed);
+        m_bottomShooter.set(-DriveConstants.kBottomShooterSpeed);
+        m_topShooter.set(-DriveConstants.kTopShooterSpeed);
+        m_grabber.set(-DriveConstants.kGrabberSpeed);
     }
 
     public void resetMotors()
