@@ -23,6 +23,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.kauailabs.navx.frc.AHRS;
 //import com.pathplanner.lib.PathPlannerTrajectory;
 //import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
@@ -107,6 +111,57 @@ public class DriveSubsystem extends SubsystemBase {
         trackingPID.setIntegratorRange(DriveConstants.kTrackingIntergratorRangeMin,
                 DriveConstants.kTrackingIntergratorRangeMax);
         m_field = new Field2d();
+    }
+
+    public void setChassisSpeeds(ChassisSpeeds speeds) {
+        double xSpeed = speeds.vxMetersPerSecond;
+        double ySpeed = speeds.vyMetersPerSecond;
+        double rot = speeds.omegaRadiansPerSecond;
+
+        drive(xSpeed, ySpeed, rot, false, true, isTrackingObject, isAvoidingObject, isBalancing);
+    }
+
+    /**
+     * Gets the current robot-relative velocity (x, y and omega) of the robot
+     *
+     * @return A ChassisSpeeds object of the current robot-relative velocity
+     */
+    public ChassisSpeeds getRobotVelocity() {
+        return DriveConstants.kDriveKinematics.toChassisSpeeds(
+                m_frontLeft.getState(),
+                m_frontRight.getState(),
+                m_rearLeft.getState(),
+                m_rearRight.getState()
+        );
+    }
+
+    /**
+     * Setup AutoBuilder for PathPlanner.
+     */
+    public void setupPathPlanner()
+    {
+        AutoBuilder.configureHolonomic(
+                this::getPose, // Robot pose supplier
+                this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                                                                                new PIDConstants(2, 0.0, 0.0), // P: 5 I: 0.0 D: 0.0
+                                                                                // Translation PID constants
+                                                                                new PIDConstants(DriveConstants.kTrackingP,
+                                                                                                                    DriveConstants.kTrackingI,
+                                                                                                                    DriveConstants.kTrackingD),
+                                                                                // Rotation PID constants
+                                                                                4.5,
+                                                                                // Max module speed, in m/s
+                                                                                Math.cos(45) * DriveConstants.kTrackWidth,
+                                                                                // Drive base radius in meters. Distance from robot center to furthest module.
+                                                                                new ReplanningConfig()
+                                                                                // Default path replanning config. See the API for the options here
+                ),
+                () -> false,
+                this // Reference to this subsystem to set requirements
+                                                                    );
     }
 
     public void toggleCam() {
