@@ -77,13 +77,13 @@ public class DriveCommand extends Command {
     else {
       if (m_stadiaController.getBButtonPressed())
         isFieldRelative = !isFieldRelative;
-      if (m_stadiaController.getGoogleButtonPressed())
-        m_subsystem.toggleCam(); // FIX THIS FIX THIS FIX THIS FIX THIS
+//      if (m_stadiaController.getGoogleButtonPressed())
+//        m_subsystem.toggleCam(); // FIX THIS FIX THIS FIX THIS FIX THIS
       if (m_stadiaController.getAButtonPressed() && isFieldRelative)
         m_subsystem.zeroHeading();
       if (m_stadiaController.getXButtonPressed())
         isDefending = !isDefending;
-      if (m_stadiaController.getFrameButton())
+      if (m_stadiaController.getFrameButtonPressed())
         speedDivider = speedDivider == 1 ? 2 : 1;
       if (isDefending) {
         m_subsystem.setX();
