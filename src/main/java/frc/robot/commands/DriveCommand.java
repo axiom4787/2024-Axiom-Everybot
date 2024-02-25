@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.StadiaController;
 
 import frc.robot.Constants.OIConstants;
@@ -43,6 +44,8 @@ public class DriveCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("Is Defending", isDefending);
+    SmartDashboard.putBoolean("Full Speed", speedDivider == 1);
     if (Constants.xbox) {
       if (m_xboxController.getBButtonPressed())
         isFieldRelative = !isFieldRelative;
