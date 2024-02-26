@@ -30,7 +30,7 @@ public class DriveCommand extends Command {
   private boolean isTrackingObject = false;
   private boolean isAvoidingObject = false;
   private boolean isDefending = false;
-  private int speedDivider = 1;
+  private double speedDivider = 1.25;
  
   // Called when the command is initially scheduled.
   @Override
@@ -45,7 +45,7 @@ public class DriveCommand extends Command {
   @Override
   public void execute() {
     SmartDashboard.putBoolean("Is Defending", isDefending);
-    SmartDashboard.putBoolean("Full Speed", speedDivider == 1);
+    SmartDashboard.putBoolean("Full Speed", speedDivider == 1.25);
     if (Constants.xbox) {
       if (m_xboxController.getBButtonPressed())
         isFieldRelative = !isFieldRelative;
@@ -87,7 +87,7 @@ public class DriveCommand extends Command {
       if (m_stadiaController.getXButtonPressed())
         isDefending = !isDefending;
       if (m_stadiaController.getFrameButtonPressed())
-        speedDivider = speedDivider == 1 ? 2 : 1;
+        speedDivider = speedDivider == 1.25 ? 2 : 1.25;
       if (isDefending) {
         m_subsystem.setX();
         return;

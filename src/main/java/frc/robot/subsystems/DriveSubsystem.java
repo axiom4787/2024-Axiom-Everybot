@@ -154,7 +154,7 @@ public class DriveSubsystem extends SubsystemBase {
                                                                                 // Rotation PID constants
                                                                                 4.5,
                                                                                 // Max module speed, in m/s
-                                                                                Math.cos(45) * DriveConstants.kTrackWidth,
+                                                                                15.909902576697319299018,
                                                                                 // Drive base radius in meters. Distance from robot center to furthest module.
                                                                                 new ReplanningConfig()
                                                                                 // Default path replanning config. See the API for the options here

@@ -79,7 +79,7 @@ public final class Constants
         public static final IdleMode kDrivingMotorIdleMode = IdleMode.kBrake;
         public static final IdleMode kTurningMotorIdleMode = IdleMode.kBrake;
 
-        public static final int kDrivingMotorCurrentLimit = 30; // amps
+        public static final int kDrivingMotorCurrentLimit = 40; // amps
         public static final int kTurningMotorCurrentLimit = 20; // amps
     }
 
@@ -156,8 +156,8 @@ public final class Constants
         public static final boolean kGyroReversed = false;
 
         public static final double kClimberMotorSpeed = 1;
-        public static final double kTopShooterSpeed = 0.1;
-        public static final double kBottomShooterSpeed = 0.1;
+        public static final double kTopShooterSpeed = 1;
+        public static final double kBottomShooterSpeed = 1;
         public static final double kGrabberSpeed = 0.1;
     }
 

@@ -3,12 +3,15 @@ package frc.robot;
 import java.util.Optional;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import frc.robot.commands.DriveCommand;
@@ -31,9 +34,11 @@ public class RobotContainer {
     private static final ParallelCommandGroup m_teleopCommand = new ParallelCommandGroup(m_driveCommand, m_mechCommand);
     private static final Command m_autoShoot = new InstantCommand(() -> m_mechSystem.ejectNote(), m_mechSystem);
     private static final Command m_autoStop = new InstantCommand(() -> m_mechSystem.resetMotors(), m_mechSystem);
+    // private static final SendableChooser<String> autoChooser = new SendableChooser<>();
 
 
     public RobotContainer() {
+        m_driveSystem.setupPathPlanner();
         NamedCommands.registerCommand("shoot", m_autoShoot);
         NamedCommands.registerCommand("stop", m_autoStop);
         configureBindings();
@@ -44,18 +49,15 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        SmartDashboard.putData("amp close", AutoBuilder.followPath(
-            PathPlannerPath.fromPathFile("amp shoot close")
-        ));
-        SmartDashboard.putData("amp center", AutoBuilder.followPath(
-            PathPlannerPath.fromPathFile("amp shoot center")
-        ));
-        SmartDashboard.putData("amp far", AutoBuilder.followPath(
-            PathPlannerPath.fromPathFile("amp shoot far")
-        ));
+        // SmartDashboard.putData("Auto Mode", autoChooser);
+        // autoChooser.addOption("close", "amp shoot close");
+        // autoChooser.addOption("center", "amp shoot center");
+        // autoChooser.addOption("far", "amp shoot far");
     }
 
-    // public Command getAutoCommand() {
-    //     return m_autoCommand;
-    // }
+    public Command getAutoCommand() {
+        PathPlannerPath path = PathPlannerPath.fromPathFile("test");
+        m_driveSystem.resetOdometry(new Pose2d(path.getPoint(0).position, new Rotation2d(m_driveSystem.getHeading())));
+        return AutoBuilder.followPath(path);
+    }
 }
