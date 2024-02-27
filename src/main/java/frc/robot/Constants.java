@@ -8,14 +8,12 @@ import com.revrobotics.CANSparkBase.IdleMode;
 
 public final class Constants
 {
-    public enum AutoMode {
-        amNothing,
-        amLaunchDrive,
-        amLaunch,
-        amDrive,
+    public enum MechState
+    {
+        mReset,
+        mPositive,
+        mNegative,
     }
-
-    public static final boolean xbox = false;
 
     public static class LimelightConstants {
         public static final double kLLHeight = Units.inchesToMeters(24.5);
@@ -155,10 +153,9 @@ public final class Constants
 
         public static final boolean kGyroReversed = false;
 
-        public static final double kClimberMotorSpeed = 1;
-        public static final double kTopShooterSpeed = 1;
-        public static final double kBottomShooterSpeed = 1;
-        public static final double kGrabberSpeed = 0.1;
+        public static final double kClimberSpeed = 0.5;
+        public static final double kShooterSpeed = 1;
+        public static final double kRollerSpeed = 0.1;
     }
 
     public static final class OIConstants {

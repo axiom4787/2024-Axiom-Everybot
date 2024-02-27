@@ -68,10 +68,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final AHRS m_gyro = new AHRS(SPI.Port.kMXP); // navX
 
     private boolean isFieldRelative = true;
+    private boolean isStatue = false;
     private boolean isBalancing = false;
     private boolean isTrackingObject = false; // allows for rotation to be controlled by the limelight
     private boolean isAvoidingObject = false;
-    private boolean isAimAssist = true; // allows for rotation to be controlled by the controller and the limelight
+    private boolean isAimAssist = false; // allows for rotation to be controlled by the controller and the limelight
                                         // //requires isTrackingObject to be true
 
     // Slew rate filter variables for controlling lateral acceleration
@@ -82,6 +83,8 @@ public class DriveSubsystem extends SubsystemBase {
     private SlewRateLimiter m_magLimiter = new SlewRateLimiter(DriveConstants.kMagnitudeSlewRate);
     private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(DriveConstants.kRotationalSlewRate);
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
+
+    public double speedReduction = 1.25;
 
     PIDController trackingPID = new PIDController(DriveConstants.kTrackingP, DriveConstants.kTrackingI,
             DriveConstants.kTrackingD);
@@ -118,7 +121,15 @@ public class DriveSubsystem extends SubsystemBase {
         double ySpeed = speeds.vyMetersPerSecond;
         double rot = speeds.omegaRadiansPerSecond;
 
-        drive(xSpeed, ySpeed, rot, false, true, isTrackingObject, isAvoidingObject, isBalancing);
+        drive(xSpeed, ySpeed, rot);
+    }
+
+    public void toggleFieldRelative() {
+        isFieldRelative = !isFieldRelative;
+    }
+
+    public void toggleStatue() {
+        isStatue = !isStatue;
     }
 
     /**
@@ -180,7 +191,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Avoiding Object", isAvoidingObject);
         SmartDashboard.putBoolean("Balancing", isBalancing);
         SmartDashboard.putNumber("stupid", convertToRange(Rotation2d.fromDegrees(-m_gyro.getYaw()).getDegrees() + gyroOffset));
-        SmartDashboard.putNumber("gyrooffset", gyroOffset);
+        SmartDashboard.putNumber("Gyro Offset", gyroOffset);
 
         m_frontLeftPosition = m_frontLeft.getPosition().distanceMeters;
         m_frontRightPosition = m_frontRight.getPosition().distanceMeters;
@@ -256,31 +267,15 @@ public class DriveSubsystem extends SubsystemBase {
      * @param rateLimit      Whether to enable rate limiting for smoother control.
      * @param trackingObject Whether to enable object tracking using a limelight
      */
-    public void drive(double _xSpeed, double _ySpeed, double rot, boolean fieldRelative, boolean rateLimit,
-            boolean trackingObject, boolean avoidingObject, boolean balancing) {
-
-        this.isFieldRelative = fieldRelative;
-        this.isBalancing = balancing;
-        this.isTrackingObject = trackingObject;
-        this.isAvoidingObject = avoidingObject;
-
-        double xSpeed = balancing ? 0 : _xSpeed;
-        double ySpeed = balancing ? calculateBalanceRollAdjustmentVelocity(_ySpeed) : _ySpeed;
-        rot = balancing ? calculateBalanceCenterTrackingAngularVelocity() : rot;
-
-        if (avoidingObject) {
-            if (this.isFieldRelative) {
-                if (Math.max(xSpeed, ySpeed) == xSpeed) {
-                    ySpeed = calculateObjectAvoidanceVelocity(ySpeed);
-                } else {
-                    xSpeed = calculateObjectAvoidanceVelocity(xSpeed);
-                }
-            } else {
-                xSpeed = calculateObjectAvoidanceVelocity(_xSpeed);
-            }
+    public void drive(double _xSpeed, double _ySpeed, double rot) {
+        if (isStatue)
+        {
+            setX();
+            return;
         }
-
-        double speedReduction = 1;
+        
+        double xSpeed = _xSpeed;
+        double ySpeed = _ySpeed;
 
         xSpeed = xSpeed / speedReduction;
         ySpeed = ySpeed / speedReduction;
@@ -291,54 +286,46 @@ public class DriveSubsystem extends SubsystemBase {
         double xSpeedCommanded;
         double ySpeedCommanded;
 
-        if (rateLimit) {
-            // Convert XY to polar for rate limiting
-            double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
-            double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+        // Convert XY to polar for rate limiting
+        double inputTranslationDir = Math.atan2(ySpeed, xSpeed);
+        double inputTranslationMag = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
-            // Calculate the direction slew rate based on an estimate of the lateral
-            // acceleration
-            double directionSlewRate;
-            if (m_currentTranslationMag != 0.0) {
-                directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
-            } else {
-                directionSlewRate = 500.0; // some high number that means the slew rate is effectively instantaneous
-            }
-
-            double currentTime = WPIUtilJNI.now() * 1e-6;
-            double elapsedTime = currentTime - m_prevTime;
-            double angleDif = SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDir);
-            if (angleDif < 0.45 * Math.PI) {
-                m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir,
-                        directionSlewRate * elapsedTime);
-                m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-            } else if (angleDif > 0.85 * Math.PI) {
-                if (m_currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality
-                                                      // checking
-                    // keep currentTranslationDir unchanged
-                    m_currentTranslationMag = m_magLimiter.calculate(0.0);
-                } else {
-                    m_currentTranslationDir = SwerveUtils.WrapAngle(m_currentTranslationDir + Math.PI);
-                    m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
-                }
-            } else {
-                m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir,
-                        directionSlewRate * elapsedTime);
-                m_currentTranslationMag = m_magLimiter.calculate(0.0);
-            }
-            m_prevTime = currentTime;
-
-            xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
-            ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
-            //m_currentRotation = m_rotLimiter.calculate(trackingObject ? calculateTrackingAngularVelocity(rot) : balancing ? calculateBalanceCenterTrackingAngularVelocity(rot) : rot);
-            m_currentRotation = m_rotLimiter.calculate(trackingObject ? calculateTrackingAngularVelocity(rot) : rot);
-
+        // Calculate the direction slew rate based on an estimate of the lateral
+        // acceleration
+        double directionSlewRate;
+        if (m_currentTranslationMag != 0.0) {
+            directionSlewRate = Math.abs(DriveConstants.kDirectionSlewRate / m_currentTranslationMag);
         } else {
-            xSpeedCommanded = xSpeed;
-            ySpeedCommanded = ySpeed;
-            //m_currentRotation = m_rotLimiter.calculate(trackingObject ? calculateTrackingAngularVelocity(rot) : balancing ? calculateBalanceCenterTrackingAngularVelocity(rot) : rot);
-            m_currentRotation = m_rotLimiter.calculate(trackingObject ? calculateTrackingAngularVelocity(rot) : rot);
+            directionSlewRate = 500.0; // some high number that means the slew rate is effectively instantaneous
         }
+
+        double currentTime = WPIUtilJNI.now() * 1e-6;
+        double elapsedTime = currentTime - m_prevTime;
+        double angleDif = SwerveUtils.AngleDifference(inputTranslationDir, m_currentTranslationDir);
+        if (angleDif < 0.45 * Math.PI) {
+            m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir,
+                    directionSlewRate * elapsedTime);
+            m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+        } else if (angleDif > 0.85 * Math.PI) {
+            if (m_currentTranslationMag > 1e-4) { // some small number to avoid floating-point errors with equality
+                                                    // checking
+                // keep currentTranslationDir unchanged
+                m_currentTranslationMag = m_magLimiter.calculate(0.0);
+            } else {
+                m_currentTranslationDir = SwerveUtils.WrapAngle(m_currentTranslationDir + Math.PI);
+                m_currentTranslationMag = m_magLimiter.calculate(inputTranslationMag);
+            }
+        } else {
+            m_currentTranslationDir = SwerveUtils.StepTowardsCircular(m_currentTranslationDir, inputTranslationDir,
+                    directionSlewRate * elapsedTime);
+            m_currentTranslationMag = m_magLimiter.calculate(0.0);
+        }
+        m_prevTime = currentTime;
+
+        xSpeedCommanded = m_currentTranslationMag * Math.cos(m_currentTranslationDir);
+        ySpeedCommanded = m_currentTranslationMag * Math.sin(m_currentTranslationDir);
+        //m_currentRotation = m_rotLimiter.calculate(trackingObject ? calculateTrackingAngularVelocity(rot) : balancing ? calculateBalanceCenterTrackingAngularVelocity(rot) : rot);
+        m_currentRotation = m_rotLimiter.calculate(rot);
 
         // Convert the commanded speeds into the correct units for the drivetrain
         double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
