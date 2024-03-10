@@ -25,7 +25,5 @@
       }
     },
   ],
-  "java.test.defaultConfig": "WPIlibUnitTests",
-  "wpilib.selectDefaultSimulateExtension": true,
-  "java.debug.settings.onBuildFailureProceed": true
+  "java.test.defaultConfig": "WPIlibUnitTests"
 }
