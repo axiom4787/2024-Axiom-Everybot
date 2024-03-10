@@ -134,73 +134,33 @@ public final class Constants
         public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
         // SPARK MAX CAN IDs
-        public static final int kFrontLeftDrivingCanId = 4; // neo
-        public static final int kRearLeftDrivingCanId = 2; // neo
-        public static final int kFrontRightDrivingCanId = 6; // neo
-        public static final int kRearRightDrivingCanId = 8; // neo
+        public static final int kFrontLeftDrivingCanId = 3; // neo
+        public static final int kRearLeftDrivingCanId = 5; // neo
+        public static final int kFrontRightDrivingCanId = 9; // neo
+        public static final int kRearRightDrivingCanId = 7; // neo
 
-        public static final int kFrontLeftTurningCanId = 3; // neo 550
-        public static final int kRearLeftTurningCanId = 1; // neo 550
-        public static final int kFrontRightTurningCanId = 5; // neo 550
-        public static final int kRearRightTurningCanId = 7; // neo 550
+        public static final int kFrontLeftTurningCanId = 4; // neo 550
+        public static final int kRearLeftTurningCanId = 6; // neo 550
+        public static final int kFrontRightTurningCanId = 2; // neo 550
+        public static final int kRearRightTurningCanId = 8; // neo 550
+
+        public static final int kBottomShooterCanId = 10;
+        public static final int kTopShooterCanId = 11;
+        public static final int kGrabberCanId = 12;
+
+        public static final int kLeftClimberCanId = 13;
+        public static final int kRightClimberCanId = 14;
 
         public static final boolean kGyroReversed = false;
 
-        public static final int kClimberMotorID = 0;
-
-        // default climber speed (speed at which climber retracts/expands)
-        // to set to whatever feels right
-        // also can be split to expand and retract speeds separately if needed
-        public static final double kClimberMotorSpeed = 0;
+        public static final double kClimberMotorSpeed = 1;
+        public static final double kTopShooterSpeed = 1;
+        public static final double kBottomShooterSpeed = 1;
+        public static final double kGrabberSpeed = 0.25;
     }
-
-    public static class FeederConstants
-    {
-        /**
-         * How many amps the feeder motor can use.
-         */
-        public static final int FEEDER_CURRENT_LIMIT_A = 80;
-      
-        /**
-         * Percent output to run the feeder when expelling note
-         */
-        public static final double FEEDER_OUT_SPEED = 1.0;
-      
-        /**
-         * Percent output to run the feeder when intaking note
-         */
-        public static final double FEEDER_IN_SPEED = -.4;
-      
-        /**
-         * Percent output for amp or drop note, configure based on polycarb bend
-         */
-        public static final double FEEDER_AMP_SPEED = .4;
-      
-        /**
-         * How many amps the launcher motor can use.
-         *
-         * In our testing we favored the CIM over NEO, if using a NEO lower this to 60
-         */
-    }
-
-    public static class LauncherConstants
-    {
-        public static final int LAUNCHER_CURRENT_LIMIT_A = 80;
-      
-        /**
-         * Percent output to run the launcher when intaking AND expelling note
-         */
-        public static final double LAUNCHER_SPEED = 1.0;
-      
-        /**
-         * Percent output for scoring in amp or dropping note, configure based on polycarb bend
-         * .14 works well with no bend from our testing
-         */
-        public static final double LAUNCHER_AMP_SPEED = .17;
-      
-    }    
 
     public static final class OIConstants {
+        public static final double kAdjustSpeed = 0.15;
         public static final double kDriveDeadband = 0.1;
     }
 

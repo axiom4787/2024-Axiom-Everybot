@@ -170,9 +170,13 @@ out/
 
 # Simulation GUI and other tools window save file
 *-window.json
+simgui*
 
 # Simulation data log directory
 logs/
 
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
+
+# Backups of old code
+*.bak
