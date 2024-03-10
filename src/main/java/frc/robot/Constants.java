@@ -16,14 +16,11 @@ public final class Constants
     }
 
     public static class LimelightConstants {
-        public static final double kLLHeight = Units.inchesToMeters(24.5);
+        public static final double kLLHeight = Units.inchesToMeters(20);
         public static final double kLLPitch = Units.degreesToRadians(0);
         public static final double kMinObjectAvoidanceDistance = Units.inchesToMeters(12);
-        public static final double kObjectHeight = Units.inchesToMeters(12);
+        public static final double kObjectHeight = Units.inchesToMeters(57);
         public static final double kObjectPitch = Units.degreesToRadians(0);
-
-        public static final int[] kBlueAprilTags = new int[]{1,2,3,4};
-        public static final int[] kRedAprilTags = new int[]{5,6,7,8};
     }
     
     public static class ModuleConstants {
@@ -41,7 +38,7 @@ public final class Constants
 
         // Calculations required for driving motor conversion factors and feed forward
         public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
-        public static final double kWheelDiameterMeters = 0.0762;
+        public static final double kWheelDiameterMeters = Units.inchesToMeters(3);
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
         // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
         // teeth on the bevel pinion
@@ -93,12 +90,16 @@ public final class Constants
     {
         // Driving Parameters - Note that these are not the maximum capable speeds of
         // the robot, rather the allowed maximum speeds
-        public static final double kMaxSpeedMetersPerSecond = 4.8;
+        public static final double kMaxSpeedMetersPerSecond = 4.12;
         public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
         public static final double kDirectionSlewRate = 1.2; // radians per second
         public static final double kMagnitudeSlewRate = 1.8; // percent per second (1 = 100%)
         public static final double kRotationalSlewRate = 2.0; // percent per second (1 = 100%)
+
+        public static final double kHeadingP = 0.025;
+        public static final double kHeadingI = 0.003;
+        public static final double kHeadingD = 0.001;
 
         public static final double kTrackingP = 0.02; // 0.02
         public static final double kTrackingI = 0.0; // 0.003
@@ -144,18 +145,31 @@ public final class Constants
         public static final int kFrontRightTurningCanId = 4; // neo 550
         public static final int kRearRightTurningCanId = 2; // neo 550
 
-        public static final int kBottomShooterCanId = 12;
-        public static final int kTopShooterCanId = 11;
-        public static final int kGrabberCanId = 10;
-
-        public static final int kLeftClimberCanId = 13;
-        public static final int kRightClimberCanId = 14;
-
         public static final boolean kGyroReversed = false;
+    }
 
+    public static final class ClimberConstants
+    {
+        public static final int kLeftClimberCanId = 14; // neo
+        public static final int kRightClimberCanId = 15; // neo
         public static final double kClimberSpeed = 0.5;
-        public static final double kShooterSpeed = 1;
-        public static final double kRollerSpeed = 0.1;
+    }
+
+    public static final class LauncherConstants
+    {
+        public static final int kFrontCanId = 11; // neo
+        public static final int kBackCanId = 12; // neo
+        public static final int kLowerCanId = 13; // redline
+        public static final double kUpperLauncherSpeed = 1;//1;
+        public static final double kUpperIntakeSpeed = -0.5;//-1;
+        public static final double kLowerLauncherSpeed = 0.5;//0.5;
+        public static final double kLowerIntakeSpeed = -0.1;//-0.5;
+    }
+
+    public static final class RollerConstants
+    {
+        public static final int kCanId = 10; // redline
+        public static final double kRollerSpeed = 0.2;
     }
 
     public static final class OIConstants {

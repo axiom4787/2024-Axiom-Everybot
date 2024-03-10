@@ -23,10 +23,21 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         SmartDashboard.putNumber("Time (seconds)", Timer.getFPGATimestamp());
         CommandScheduler.getInstance().run();
+        if (m_autoCommand != null && m_autoCommand.isFinished()) {
+            m_autoCommand.cancel();
+            System.out.println("Auto command detected as finished, cancelling now.");
+            m_autoCommand = null;
+            m_container.getZeroCommand().schedule();
+            System.out.println("Scheduled zero-chassis command");
+        }
     }
 
     @Override
     public void teleopInit() {
+        if (m_autoCommand != null && !m_autoCommand.isFinished()) {
+            m_autoCommand.cancel();
+        }
+
         m_teleopCommand = m_container.getTeleopCommand();
         if (m_teleopCommand != null)
             m_teleopCommand.schedule();
@@ -34,6 +45,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        if (m_teleopCommand != null && !m_teleopCommand.isFinished()) {
+            m_teleopCommand.cancel();
+        }
+
         m_autoCommand = m_container.getAutoCommand();
         if (m_autoCommand != null)
             m_autoCommand.schedule();

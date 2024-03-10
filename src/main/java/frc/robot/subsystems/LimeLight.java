@@ -144,7 +144,7 @@ public class LimeLight extends SubsystemBase {
      * 
      * @return The current pipeline number or 0.0 if no object is found.
      */
-    public double getPipline() {
+    public double getPipeline() {
         return getpipe.getDouble(0.0);
     }
 
@@ -310,7 +310,7 @@ public class LimeLight extends SubsystemBase {
         SmartDashboard.putNumber("LimelightY", getYAngle());
         SmartDashboard.putNumber("LimelightArea", getArea());
         SmartDashboard.putNumber("CurrentTargetedTagID", getTagID());
-        SmartDashboard.putNumber("CurrentPipline", getPipline());
+        SmartDashboard.putNumber("CurrentPipline", getPipeline());
         SmartDashboard.putNumber("TranslationX", getBotTranslation()[0]);
         SmartDashboard.putNumber("TranslationY", getBotTranslation()[1]);
         SmartDashboard.putNumber("TranslationZ", getBotTranslation()[2]);

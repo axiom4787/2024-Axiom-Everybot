@@ -4,58 +4,36 @@
     {
       "anchor": {
         "x": 0.5,
-        "y": 4.15
+        "y": 1.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4999829171938486,
-        "y": 4.1417337473554445
+        "x": 1.500000000000002,
+        "y": 1.5
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.66,
-        "y": 7.55
+        "x": 1.91,
+        "y": 1.5
       },
       "prevControl": {
-        "x": 1.66,
-        "y": 7.6499999999999995
-      },
-      "nextControl": {
-        "x": 1.66,
-        "y": 7.5
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.66,
-        "y": 7.65
-      },
-      "prevControl": {
-        "x": 1.66,
-        "y": 7.7
+        "x": 0.9100000000000001,
+        "y": 1.5
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3,
-      "rotationDegrees": 90.0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "New Event Marker",
-      "waypointRelativePos": 1.0,
+      "name": "score",
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -75,7 +53,7 @@
             {
               "type": "named",
               "data": {
-                "name": "stop"
+                "name": "speaker stop"
               }
             }
           ]
@@ -91,7 +69,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0,
+    "rotation": 0.0,
     "rotateFast": true
   },
   "reversed": false,
