@@ -17,9 +17,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.MechanismSubsystem;
 import frc.robot.subsystems.LimeLight;
@@ -41,45 +42,79 @@ public class RobotContainer {
     private static final LimeLight m_limeLight = new LimeLight();
     private static final DriveSubsystem m_driveSystem = new DriveSubsystem(m_limeLight);
     private static final MechanismSubsystem m_mechSystem = new MechanismSubsystem();
-    private static final Command m_autoAmpShoot = new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mPositive), m_mechSystem);
-    private static final Command m_autoRollerReset = new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mReset), m_mechSystem);
-    private static final Command m_autoSpeakerShoot = new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mPositive), m_mechSystem);
-    private static final Command m_autoShooterReset = new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mReset), m_mechSystem);
-    private static final Command m_driveCommand = new RunCommand(() -> {
-        double xSpeed, ySpeed, rot;
-        if (m_controller.getPOV() != -1) {
-            double POV = Math.toRadians(-m_controller.getPOV());
-            xSpeed = OIConstants.kDriveAdjustSpeed*Math.cos(POV);
-            ySpeed = OIConstants.kDriveAdjustSpeed*Math.sin(POV); 
+    private static final ClimberSubsystem m_climberSystem = new ClimberSubsystem();
+    private static final Command m_speakerPath = new InstantCommand(m_driveSystem::zeroHeading, m_driveSystem)
+        .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mPositive), m_mechSystem))
+        .andThen(new WaitCommand(2))
+        .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mReset), m_mechSystem))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(-0.5, 0, 0)), m_driveSystem))
+        .andThen(new WaitCommand(1))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem));
+    private static final Command m_blueAmpPath = new InstantCommand(m_driveSystem::zeroHeading, m_driveSystem)
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(0.25, 0.25, 0)), m_driveSystem))
+        .andThen(new WaitCommand(1))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem))
+        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mPositive), m_mechSystem))
+        .andThen(new WaitCommand(2))
+        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mReset), m_mechSystem))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(-0.25, 0.25, 0)), m_driveSystem))
+        .andThen(new WaitCommand(1))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem));
+    private static final Command m_redAmpPath = new InstantCommand(m_driveSystem::zeroHeading, m_driveSystem)
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(0.25, -0.25, 0)), m_driveSystem))
+        .andThen(new WaitCommand(1))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem))
+        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mPositive), m_mechSystem))
+        .andThen(new WaitCommand(2))
+        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mReset), m_mechSystem))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(-0.25, -0.25, 0)), m_driveSystem))
+        .andThen(new WaitCommand(1))
+        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem));
+
+    private static boolean isDriving = true;
+    private static final Command m_teleopCommand = new RunCommand(() -> {
+        if (isDriving) {
+            double xSpeed, ySpeed, rot;
+            if (m_controller.getPOV() != -1) {
+                double POV = Math.toRadians(-m_controller.getPOV());
+                xSpeed = OIConstants.kDriveAdjustSpeed*Math.cos(POV);
+                ySpeed = OIConstants.kDriveAdjustSpeed*Math.sin(POV); 
+            }
+            else {
+                xSpeed = -MathUtil.applyDeadband(m_controller.getLeftY(), OIConstants.kDriveDeadband);
+                ySpeed = -MathUtil.applyDeadband(m_controller.getLeftX(), OIConstants.kDriveDeadband);
+            }
+            if (m_controller.getEllipsesButton())
+                rot = -OIConstants.kTurnAdjustSpeed;
+            else if (m_controller.getHamburgerButton())
+                rot = OIConstants.kTurnAdjustSpeed;
+            else
+                rot = -MathUtil.applyDeadband(m_controller.getRightX()/2, OIConstants.kDriveDeadband);
+            m_driveSystem.drive(xSpeed, ySpeed, rot);
         }
-        else {
-            xSpeed = -MathUtil.applyDeadband(m_controller.getLeftY(), OIConstants.kDriveDeadband);
-            ySpeed = -MathUtil.applyDeadband(m_controller.getLeftX(), OIConstants.kDriveDeadband);
-        }
-        if (m_controller.getEllipsesButton())
-            rot = -OIConstants.kTurnAdjustSpeed;
-        else if (m_controller.getHamburgerButton())
-            rot = OIConstants.kTurnAdjustSpeed;
         else
-            rot = -MathUtil.applyDeadband(m_controller.getRightX()/2, OIConstants.kDriveDeadband);
-        m_driveSystem.drive(xSpeed, ySpeed, rot);
+        {
+            double leftClimberSpeed = MathUtil.applyDeadband(m_controller.getLeftY(), OIConstants.kDriveDeadband);
+            double rightClimberSpeed = MathUtil.applyDeadband(m_controller.getRightY(), OIConstants.kDriveDeadband);
+            m_climberSystem.setLeftClimber(leftClimberSpeed);
+            m_climberSystem.setRightClimber(rightClimberSpeed);
+        }
     }, m_driveSystem);
 
     private static final ChoreoTrajectory traj = Choreo.getTrajectory("test");
 
-    private static final Command m_autoTestCommand = new AutoTestCommand(m_driveSystem); 
-
+    private SendableChooser<Command> m_autoChooser = new SendableChooser<>();
     public RobotContainer() {
         m_driveSystem.setupPathPlanner();
-        NamedCommands.registerCommand("amp shoot", m_autoAmpShoot);
-        NamedCommands.registerCommand("amp stop", m_autoRollerReset);
-        NamedCommands.registerCommand("speaker shoot", m_autoSpeakerShoot);
-        NamedCommands.registerCommand("speaker stop", m_autoShooterReset);
+        m_autoChooser.addOption("speaker", m_speakerPath);
+        Optional<Alliance> alliance = DriverStation.getAlliance();
+        boolean blue = alliance.isPresent() && alliance.get() == Alliance.Blue;
+        m_autoChooser.addOption("amp", blue ? m_blueAmpPath : m_redAmpPath);
         configureBindings();
     }
 
     public Command getTeleopCommand() {
-        return m_driveCommand;
+        return m_teleopCommand;
     }
 
     private void configureBindings() {
@@ -138,7 +173,12 @@ public class RobotContainer {
 
         new JoystickButton(m_controller, StadiaController.Button.kFrame.value)
         .onTrue(new InstantCommand(() -> {
-            m_driveSystem.speedReduction = m_driveSystem.speedReduction == 4 ? 4 : 4;
+            m_driveSystem.speedReduction = m_driveSystem.speedReduction == 1 ? 2 : 1;
+        }));
+
+        new JoystickButton(m_controller, StadiaController.Button.kY.value)
+        .onTrue(new InstantCommand(() -> {
+            isDriving = !isDriving;
         }));
     }
 
@@ -146,19 +186,20 @@ public class RobotContainer {
     //     PathPlannerPath path = PathPlannerPath.fromPathFile("shoot");
     //     m_driveSystem.resetOdometry(path.getPreviewStartingHolonomicPose());
     //     return AutoBuilder.followPath(path);
-        m_driveSystem.resetOdometry(traj.getInitialPose());
-        return Choreo.choreoSwerveCommand(
-            traj, 
-            m_driveSystem::getPose, 
-            new PIDController(2.5, 0, 0), 
-            new PIDController(2.5, 0, 0),
-            new PIDController(1.35, 0, 0),
-            m_driveSystem::setChassisSpeeds,
-            () -> {
-                Optional<Alliance> alliance = DriverStation.getAlliance();
-                return alliance.isPresent() && alliance.get() == Alliance.Red;
-            },
-            m_driveSystem);
+        // m_driveSystem.resetOdometry(traj.getInitialPose());
+        // return Choreo.choreoSwerveCommand(
+        //     traj, 
+        //     m_driveSystem::getPose, 
+        //     new PIDController(2.5, 0, 0), 
+        //     new PIDController(2.5, 0, 0),
+        //     new PIDController(1.35, 0, 0),
+        //     m_driveSystem::setChassisSpeeds,
+        //     () -> {
+        //         Optional<Alliance> alliance = DriverStation.getAlliance();
+        //         return alliance.isPresent() && alliance.get() == Alliance.Red;
+        //     },
+        //     m_driveSystem);
+        return m_autoChooser.getSelected();
     }
 
     public Command getZeroCommand() {

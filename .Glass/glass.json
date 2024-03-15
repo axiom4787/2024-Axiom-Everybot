@@ -14,11 +14,6 @@
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     },
     "windows": {
-      "/SmartDashboard/Field": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/navX-Sensor[4]": {
         "window": {
           "visible": true

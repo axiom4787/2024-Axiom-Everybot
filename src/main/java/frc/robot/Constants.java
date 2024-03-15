@@ -150,30 +150,31 @@ public final class Constants
 
     public static final class ClimberConstants
     {
-        public static final int kLeftClimberCanId = 14; // neo
-        public static final int kRightClimberCanId = 15; // neo
+        public static final int kLeftCanId = 14; // neo
+        public static final int kRightCanId = 15; // neo
         public static final double kClimberSpeed = 0.5;
     }
 
-    public static final class LauncherConstants
+    public static final class ShooterConstants
     {
         public static final int kFrontCanId = 11; // neo
         public static final int kBackCanId = 12; // neo
-        public static final int kLowerCanId = 13; // redline
-        public static final double kUpperLauncherSpeed = 1;//1;
-        public static final double kUpperIntakeSpeed = -0.5;//-1;
-        public static final double kLowerLauncherSpeed = 0.5;//0.5;
-        public static final double kLowerIntakeSpeed = -0.1;//-0.5;
+        public static final int kIndexerCanId = 13; // redline
+        public static final double kShooterLaunchSpeed = 1;//1;
+        public static final double kShooterIntakeSpeed = -0.5;//-1;
+        public static final double kIndexerLaunchSpeed = 1;//0.5;
+        public static final double kIndexerIntakeSpeed = -0.5;//-0.5;
+        public static final double kIndexerDelay = 1;
     }
 
     public static final class RollerConstants
     {
-        public static final int kCanId = 10; // redline
+        public static final int kCanId = 10; // neo
         public static final double kRollerSpeed = 0.2;
     }
 
     public static final class OIConstants {
-        public static final double kDriveAdjustSpeed = 0.05;
+        public static final double kDriveAdjustSpeed = 0.1;
         public static final double kTurnAdjustSpeed = 0.15;
         public static final double kDriveDeadband = 0.1;
     }
