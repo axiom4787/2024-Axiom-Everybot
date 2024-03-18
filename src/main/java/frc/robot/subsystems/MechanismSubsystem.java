@@ -67,10 +67,10 @@ public class MechanismSubsystem extends SubsystemBase {
         switch (m_rollerState)
         {
             case mNegative:
-                m_roller.set(-RollerConstants.kRollerSpeed);
+                m_roller.set(RollerConstants.kRollerSpeed);
                 break;
             case mPositive:
-                m_roller.set(RollerConstants.kRollerSpeed);
+                m_roller.set(-RollerConstants.kRollerSpeed);
                 break;
             case mReset:
                 m_roller.set(0);

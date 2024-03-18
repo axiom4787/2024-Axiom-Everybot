@@ -152,7 +152,7 @@ public final class Constants
     {
         public static final int kLeftCanId = 14; // neo
         public static final int kRightCanId = 15; // neo
-        public static final double kClimberSpeed = 0.5;
+        public static final double kClimberSpeed = 0.75;
     }
 
     public static final class ShooterConstants
