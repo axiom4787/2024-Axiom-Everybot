@@ -65,12 +65,31 @@
     },
     "windows": {
       "/SmartDashboard/Field": {
+        "Amp Pose": {
+          "length": 0.8259999752044678,
+          "width": 0.8255000114440918
+        },
+        "Robot": {
+          "length": 0.8259999752044678,
+          "width": 0.8259999752044678
+        },
+        "Source Pose": {
+          "length": 0.8259999752044678,
+          "width": 0.8259999752044678
+        },
+        "Speaker Pose": {
+          "length": 0.8259999752044678,
+          "width": 0.8259999752044678
+        },
         "bottom": 1476,
         "height": 8.210550308227539,
         "left": 150,
         "right": 2961,
         "top": 79,
-        "width": 16.541748046875
+        "width": 16.541748046875,
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -80,7 +99,9 @@
     },
     "Connections": {
       "open": true
-    },
-    "visible": true
+    }
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }

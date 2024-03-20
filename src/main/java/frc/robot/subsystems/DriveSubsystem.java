@@ -18,11 +18,14 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
@@ -35,6 +38,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import frc.robot.Constants.AlignConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 import frc.utils.SwerveUtils;
@@ -128,10 +132,12 @@ public class DriveSubsystem extends SubsystemBase {
         headingController.enableContinuousInput(-180, 180);
         headingController.setTolerance(0.05);
         m_field = new Field2d();
-        // PathPlannerPath path = PathPlannerPath.fromPathFile("test");
-        ChoreoTrajectory traj = Choreo.getTrajectory("test");
-        Pose2d[] poses = traj.getPoses();
-        m_field.getObject("Test Path").setPoses(poses);
+        m_field.getObject("Speaker Pose").setPose(AlignConstants.kSpeakerPose);
+        m_field.getObject("Amp Pose").setPose(AlignConstants.kAmpPose);
+        m_field.getObject("Source Close Pose").setPose(AlignConstants.kSourceClosePose);
+        m_field.getObject("Source Center Pose").setPose(AlignConstants.kSourceCenterPose);
+        m_field.getObject("Source Far Pose").setPose(AlignConstants.kSourceFarPose);
+
     }
 
     public void setChassisSpeeds(ChassisSpeeds speeds) {
@@ -194,7 +200,10 @@ public class DriveSubsystem extends SubsystemBase {
                                                                                 new ReplanningConfig()
                                                                                 // Default path replanning config. See the API for the options here
                 ),
-                () -> false,
+                () -> {
+                    Optional<Alliance> alliance = DriverStation.getAlliance();
+                    return alliance.isPresent() && alliance.get() == Alliance.Red;
+                },
                 this // Reference to this subsystem to set requirements
                                                                     );
     }
@@ -247,8 +256,7 @@ public class DriveSubsystem extends SubsystemBase {
                         m_rearLeft.getPosition(),
                         m_rearRight.getPosition()
                 });
-        //m_odometry.addVisionMeasurement(LL.getBotPose2d(), LL.getLocalizationLatency());
-        m_odometry.addVisionMeasurement(LL.getBotPose2d(), 0.03);
+        m_odometry.addVisionMeasurement(LL.getBotPose2d(), /*LL.getLocalizationLatency()*/0.03);
     }
 
     /**

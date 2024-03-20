@@ -1,9 +1,16 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
+import org.opencv.features2d.KAZE;
+
+import com.pathplanner.lib.path.PathConstraints;
 import com.revrobotics.CANSparkBase.IdleMode;
 
 public final class Constants
@@ -15,12 +22,34 @@ public final class Constants
         mNegative,
     }
 
+    public static class BlinkinConstants
+    {
+        public static final double kIntaking = -0.09;
+        public static final double kShooting = -0.11;
+        public static final double kFull = 0.73;
+        public static final double kClimbing = 0.91;
+        public static final double kEmpty = 0.95;
+    }
+
     public static class LimelightConstants {
         public static final double kLLHeight = Units.inchesToMeters(20);
         public static final double kLLPitch = Units.degreesToRadians(0);
         public static final double kMinObjectAvoidanceDistance = Units.inchesToMeters(12);
         public static final double kObjectHeight = Units.inchesToMeters(57);
         public static final double kObjectPitch = Units.degreesToRadians(0);
+    }
+
+    public static class AlignConstants {
+        public static final double kRobotWidth = Units.inchesToMeters(26);
+        public static final double kBumperWidth = Units.inchesToMeters(3.25);
+        public static final double kFullWidth = kRobotWidth + 2 * kBumperWidth;
+        public static final double kHalfWidth = kFullWidth / 2;
+        public static final Pose2d kSpeakerPose = new Pose2d(1.356747, 5.556003, new Rotation2d(Units.degreesToRadians(180)));
+        public static final Pose2d kAmpPose = new Pose2d(1.637335, 7.736592, new Rotation2d(Units.degreesToRadians(90)));
+        public static final Pose2d kSourceFarPose = new Pose2d(15.974139, 1.240227, new Rotation2d(Units.degreesToRadians(-60)));
+        public static final Pose2d kSourceCenterPose = new Pose2d(15.432775, 0.941544, new Rotation2d(Units.degreesToRadians(-60)));
+        public static final Pose2d kSourceClosePose = new Pose2d(14.891412, 0.624193, new Rotation2d(Units.degreesToRadians(-60)));
+        public static final PathConstraints kAlignConstraints = new PathConstraints(0.5, 0.5, Math.PI, Math.PI);
     }
     
     public static class ModuleConstants {

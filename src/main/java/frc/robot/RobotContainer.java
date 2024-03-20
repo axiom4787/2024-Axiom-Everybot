@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.StadiaController;
 import edu.wpi.first.wpilibj.Timer;
@@ -21,13 +22,14 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.BlinkinLights;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.MechanismSubsystem;
 import frc.robot.subsystems.LimeLight;
+import frc.robot.Constants.AlignConstants;
 import frc.robot.Constants.MechState;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.AutoTestCommand;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,15 +38,17 @@ import com.choreo.lib.Choreo;
 import com.choreo.lib.ChoreoTrajectory;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 public class RobotContainer {
-    private static final StadiaController m_gunnerController = new StadiaController(0);
+    private static final Joystick m_gunnerController = new Joystick(0);
     private static final XboxController m_driverController = new XboxController(1);
     private static final LimeLight m_limeLight = new LimeLight();
     private static final DriveSubsystem m_driveSystem = new DriveSubsystem(m_limeLight);
-    private static final MechanismSubsystem m_mechSystem = new MechanismSubsystem();
-    private static final ClimberSubsystem m_climberSystem = new ClimberSubsystem();
+    private static final BlinkinLights m_lights = new BlinkinLights();
+    private static final MechanismSubsystem m_mechSystem = new MechanismSubsystem(m_lights);
+    private static final ClimberSubsystem m_climberSystem = new ClimberSubsystem(m_lights);
     private static final Command m_speakerPath = new InstantCommand(m_driveSystem::zeroHeading, m_driveSystem)
         .andThen(new WaitCommand(1))
         .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mPositive), m_mechSystem))
@@ -53,26 +57,35 @@ public class RobotContainer {
         // .andThen(new InstantCommand(() -> m_driveSyst    em.setChassisSpeeds(new ChassisSpeeds(-0.5, 0, 0)), m_driveSystem))
         // .andThen(new WaitCommand(3))
         // .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem));
-    private static final Command m_blueAmpPath = new InstantCommand(m_driveSystem::zeroHeading, m_driveSystem)
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(0.25, 0.25, 0)), m_driveSystem))
-        .andThen(new WaitCommand(1))
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem))
-        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mPositive), m_mechSystem))
-        .andThen(new WaitCommand(2))
-        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mReset), m_mechSystem))
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(-0.25, 0.25, 0)), m_driveSystem))
-        .andThen(new WaitCommand(1))
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem));
-    private static final Command m_redAmpPath = new InstantCommand(m_driveSystem::zeroHeading, m_driveSystem)
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(0.25, -0.25, 0)), m_driveSystem))
-        .andThen(new WaitCommand(1))
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem))
-        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mPositive), m_mechSystem))
-        .andThen(new WaitCommand(2))
-        .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mReset), m_mechSystem))
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds(-0.25, -0.25, 0)), m_driveSystem))
-        .andThen(new WaitCommand(1))
-        .andThen(new InstantCommand(() -> m_driveSystem.setChassisSpeeds(new ChassisSpeeds()), m_driveSystem));
+
+    // commands for aligning to speaker, amp, and source
+    // ideally should only be run when very close to the target, to avoid collisions and pathing errors
+    // can be canceled with the Y button
+    private static final Command m_alignSpeaker = AutoBuilder.pathfindToPoseFlipped(AlignConstants.kSpeakerPose, AlignConstants.kAlignConstraints)
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mPositive), m_mechSystem))
+    .andThen(new WaitCommand(2.5))
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mReset), m_mechSystem))
+    .until(() -> m_driverController.getYButtonPressed());
+    private static final Command m_alignAmp = AutoBuilder.pathfindToPoseFlipped(AlignConstants.kAmpPose, AlignConstants.kAlignConstraints)
+    .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mPositive), m_mechSystem))
+    .andThen(new WaitCommand(2.5))
+    .andThen(new InstantCommand(() -> m_mechSystem.setRollerState(MechState.mReset), m_mechSystem))
+    .until(() -> m_driverController.getYButtonPressed());
+    private static final Command m_alignSourceClose = AutoBuilder.pathfindToPoseFlipped(AlignConstants.kSourceClosePose, AlignConstants.kAlignConstraints)
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mNegative), m_mechSystem))
+    .andThen(new WaitCommand(2))
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mReset), m_mechSystem))
+    .until(() -> m_driverController.getYButtonPressed());
+    private static final Command m_alignSourceCenter = AutoBuilder.pathfindToPoseFlipped(AlignConstants.kSourceCenterPose, AlignConstants.kAlignConstraints)
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mNegative), m_mechSystem))
+    .andThen(new WaitCommand(2))
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mReset), m_mechSystem))
+    .until(() -> m_driverController.getYButtonPressed());
+    private static final Command m_alignSourceFar = AutoBuilder.pathfindToPoseFlipped(AlignConstants.kSourceFarPose, AlignConstants.kAlignConstraints)
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mNegative), m_mechSystem))
+    .andThen(new WaitCommand(2))
+    .andThen(new InstantCommand(() -> m_mechSystem.setShooterState(MechState.mReset), m_mechSystem))
+    .until(() -> m_driverController.getYButtonPressed());
 
     private static final Command m_teleopCommand = new RunCommand(() -> {
         double xSpeed, ySpeed, rot = 0;
@@ -92,18 +105,13 @@ public class RobotContainer {
         else 
             rot = -MathUtil.applyDeadband(m_driverController.getRightX()*0.8, OIConstants.kDriveDeadband);
         m_driveSystem.drive(xSpeed, ySpeed, rot);
-        m_climberSystem.setClimberSpeed(-m_gunnerController.getRightY());
+        m_climberSystem.setClimberSpeed(-m_gunnerController.getY());
     }, m_driveSystem);
 
     private static final ChoreoTrajectory traj = Choreo.getTrajectory("test");
 
-    private SendableChooser<Command> m_autoChooser = new SendableChooser<>();
     public RobotContainer() {
         m_driveSystem.setupPathPlanner();
-        m_autoChooser.addOption("speaker", m_speakerPath);
-        Optional<Alliance> alliance = DriverStation.getAlliance();
-        boolean blue = alliance.isPresent() && alliance.get() == Alliance.Blue;
-        m_autoChooser.addOption("amp", blue ? m_blueAmpPath : m_redAmpPath);
         configureBindings();
     }
 
@@ -112,62 +120,37 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // binds left bumper to enable shooters and roller for scoring
-        Trigger leftBumperState = new JoystickButton(m_gunnerController, StadiaController.Button.kLeftBumper.value)
+        Trigger speakerShootControl = new JoystickButton(m_gunnerController, 1)
         .onTrue(new InstantCommand(() -> {
             m_mechSystem.setShooterState(MechState.mPositive);
         }));
 
-        // binds right bumper to enable shooters and roller for intake
-        Trigger rightBumperState = new JoystickButton(m_gunnerController, StadiaController.Button.kRightBumper.value)
+        Trigger speakerIntakeControl = new JoystickButton(m_gunnerController, 2)
         .onTrue(new InstantCommand(() -> {
             m_mechSystem.setShooterState(MechState.mNegative);
         }));
 
-        // if both left and right bumpers are disabled, then reset the shooters and roller
-        leftBumperState.or(rightBumperState)
+        speakerShootControl.or(speakerIntakeControl)
         .negate()
         .onTrue(new InstantCommand(() -> {
             m_mechSystem.setShooterState(MechState.mReset);
         }));
 
-        // binds left bumper to enable shooters and roller for scoring
-        Trigger leftTriggerState = new JoystickButton(m_gunnerController, StadiaController.Button.kLeftTrigger.value)
+        Trigger ampShootControl = new JoystickButton(m_gunnerController, 3)
         .onTrue(new InstantCommand(() -> {
             m_mechSystem.setRollerState(MechState.mPositive);
         }));
 
-        // binds right bumper to enable shooters and roller for intake
-        Trigger rightTriggerState = new JoystickButton(m_gunnerController, StadiaController.Button.kRightTrigger.value)
+        Trigger ampIntakeControl = new JoystickButton(m_gunnerController, 4)
         .onTrue(new InstantCommand(() -> {
             m_mechSystem.setRollerState(MechState.mNegative);
         }));
 
-        // if both left and right triggers are disabled, then reset the roller
-        leftTriggerState.or(rightTriggerState)
+        ampShootControl.or(ampIntakeControl)
         .negate()
         .onTrue(new InstantCommand(() -> {
             m_mechSystem.setRollerState(MechState.mReset);
         }));
-
-        // // binds y button to retract climbers
-        // Trigger yState = new JoystickButton(m_gunnerController, StadiaController.Button.kY.value)
-        // .onTrue(new InstantCommand(() -> {
-        //     m_climberSystem.setClimberState(MechState.mNegative);
-        // }));
-
-        // // binds b button to extend climbers
-        // Trigger bState = new JoystickButton(m_gunnerController, StadiaController.Button.kB.value)
-        // .onTrue(new InstantCommand(() -> {
-        //     m_climberSystem.setClimberState(MechState.mPositive);
-        // }));
-
-        // // if neither y/b pressed do nothing with climbers
-        // yState.or(bState)
-        // .negate()
-        // .onTrue(new InstantCommand(() -> {
-        //     m_climberSystem.setClimberState(MechState.mReset);
-        // }));
 
         // zeroes gyro heading
         new JoystickButton(m_driverController, XboxController.Button.kA.value)
